@@ -419,6 +419,16 @@
         </button>
         <div><a href="#nav-logo" class="ScrollTopBtn"><i class="fa-solid fa-angle-up Fa-3x"></i></a></div>
     </div>
+
+    <script>
+        // 自動讀取 JSON 並更新網頁字體
+        fetch('./data.json')
+            .then(response => response.json())
+            .then(data => {
+                if (data.mainTitle) document.getElementById('main-title').innerText = data.mainTitle;
+                if (data.subTitle) document.getElementById('sub-title').innerText = data.subTitle;
+            });
+    </script>
 </body>
 
 </html>

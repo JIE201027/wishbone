@@ -9,9 +9,9 @@ collections:
   - name: "content"
     label: "網頁文字管理"
     files:
-      - file: "red/index.html"
+      - file: "red/data.json"
         label: "首頁內容"
         name: "home"
         fields:
-          - { label: "標題(ID: main-title)", name: "main-title", widget: "string" }
-          - { label: "副標題(ID: sub-title)", name: "sub-title", widget: "string" }
+          - { label: "大標題", name: "mainTitle", widget: "string" }
+          - { label: "副標題", name: "subTitle", widget: "string" }
