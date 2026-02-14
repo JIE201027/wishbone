@@ -1,17 +1,17 @@
 backend:
   name: git-gateway
-  branch: main # 確保這跟你的 GitHub 分支名稱一致
+  branch: main
 
 media_folder: "red/img"
 public_folder: "/img"
 
 collections:
-  - name: "pages"
-    label: "網頁內容管理"
+  - name: "content"
+    label: "網頁文字管理"
     files:
-      - label: "紅紅資助頁面"
-        name: "red-index"
-        file: "index.html" # 因為發佈目錄已設為 red，這裡直接寫 index.html 即可
+      - file: "red/index.html"
+        label: "首頁內容"
+        name: "home"
         fields:
-          - {label: "網頁標題", name: "title", widget: "string"}
-          - {label: "故事內容", name: "body", widget: "markdown"}
+          - { label: "標題(ID: main-title)", name: "main-title", widget: "string" }
+          - { label: "副標題(ID: sub-title)", name: "sub-title", widget: "string" }
