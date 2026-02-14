@@ -1,0 +1,19 @@
+/* 修改 FAQ 按鈕點擊時的顏色 */
+.accordion-button:not(.collapsed) {
+    background-color: #2980b9;
+    /* 你的品牌色 */
+    color: white;
+}
+
+/* 修改按鈕展開時的陰影 */
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(41, 128, 185, 0.5);
+}
+
+/* 讓 FAQ 圓角更有設計感 */
+.accordion-item {
+    border-radius: 10px !important;
+    margin-bottom: 15px;
+    border: 1px solid #eee;
+}

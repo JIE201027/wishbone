@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>許願骨工作室 | 網頁架設專家</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="single-page-website.css">
+</head>
+
+<body>
+    <!-- navbar -->
+    <nav class="navbar">
+        <div>
+            <img src="./img/Wishbone-Website-3.png" class="logo" alt="logo">
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero">服務項目</a></li>
+            <li><a href="#services">價格方案</a></li>
+            <li><a href="#contact">聯絡我們</a></li>
+        </ul>
+    </nav>
+
+    <!-- banner -->
+    <section id="hero" class="section">
+        <div class="content" data-aos="fade-up">
+            <h1>實現您的數位願望</h1>
+            <p id="hero-p">專業 WordPress 與客製化網頁解決方案</p>
+            <a href="#contact" class="btn">立即諮詢</a>
+        </div>
+    </section>
+
+    <!-- price -->
+    <section id="services" class="section">
+        <div class="section-header" data-aos="fade-up">
+            <h2 data-aos="fade-right">價格方案</h2>
+            <p class="section-subtitle">我們拒絕複雜的合約陷阱，堅持價格透明、代碼完全交付 (非租賃制)。<br>我們不只是架設網站，更是您數位夢想的強力後盾。</p>
+        </div>
+
+        <div class="grid price-grid">
+            <div class="card pricing-card" data-aos="zoom-in">
+                <div class="card-header">
+                    <span class="tag">輕量入門</span>
+                    <h3>專業一頁式網頁</h3>
+                    <div class="price">NT$ 10,000</div>
+                    <p class="maintenance">$3,600 / 年 (平均每日僅 $10)</p>
+                </div>
+                <div class="card-body">
+                    <p class="target">最適合：個人工作室、特定產品促銷、單一服務推廣</p>
+                    <p class="desc">追求極致讀取速度。不採用租賃平台，由我們撰寫專屬程式碼，解約可帶走完整代碼。</p>
+                    <ul class="features">
+                        <li>代碼所有權：完整原始碼交付</li>
+                        <li>全方位維護：免動手更新圖文</li>
+                        <li>極速體驗：SEO 分數更高</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card pricing-card" data-aos="zoom-in" data-aos-delay="100">
+                <div class="card-header">
+                    <span class="tag">品牌專業</span>
+                    <h3>多頁式形象網站</h3>
+                    <div class="price">NT$ 15,000</div>
+                    <p class="maintenance">維護費：$1,000 / 月</p>
+                </div>
+                <div class="card-body">
+                    <p class="target">最適合：中小企業品牌官網、專業職人形象</p>
+                    <p class="desc">使用 WordPress 系統開發，標配 4 頁設計。兼具美感與擴充性，建立品牌信任度。</p>
+                    <ul class="features">
+                        <li>SEO 友善：結構化標籤佈局</li>
+                        <li>高擴充性：隨時增加作品集區塊</li>
+                        <li>自主管理：提供簡易後台教學</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card pricing-card" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card-header">
+                    <span class="tag">商業全能</span>
+                    <h3>電子商務購物網站</h3>
+                    <div class="price">NT$ 30,000<span>起</span></div>
+                    <p class="maintenance">維護費：$1,000 / 月</p>
+                </div>
+                <div class="card-body">
+                    <p class="target">最適合：自有品牌電商、實體店面轉型線上銷售</p>
+                    <p class="desc">處理最繁雜的串接工作。包含金流、物流、電子發票，讓您專注於銷售。</p>
+                    <ul class="features">
+                        <li>金流物流：全通路支付串接</li>
+                        <li>自動化發票：省去行政負擔</li>
+                        <li>營銷整合：GA、FB Pixel 埋設</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- contact -->
+    <section id="contact" class="section">
+        <div class="contact-header" data-aos="fade-up">
+            <h2>聯絡我們</h2>
+            <p>準備好開始您的專案了嗎？請填寫下方表單，我們將於 24 小時內與您聯繫。</p>
+        </div>
+
+        <div class="contact-container" data-aos="fade-up">
+            <div class="contact-info">
+                <div class="info-item">
+                    <h3>聯絡資訊</h3>
+                    <p>📧 Email: contact@wishbone.com</p>
+                    <p>⏰ 營業時間：週一至週五 09:00 - 18:00</p>
+                </div>
+                <div class="info-item">
+                    <h3>為什麼選擇我們？</h3>
+                    <p>✓ 價格透明，無隱藏費用</p>
+                    <p>✓ 原始碼完全交付，非租賃制</p>
+                    <p>✓ 專人 1-on-1 售後維護</p>
+                </div>
+            </div>
+
+            <form action="https://formspree.io/f/你的ID" method="POST" class="contact-form">
+                <div class="input-group">
+                    <input type="text" name="name" placeholder="您的姓名" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="電子郵件" required>
+                </div>
+                <div class="input-group">
+                    <textarea name="message" placeholder="請描述您的需求（例如：預算、預計上線時間...）" required></textarea>
+                </div>
+                <button type="submit" class="btn submit-btn">送出諮詢訊息</button>
+            </form>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="single-page-website.js"></script>
+</body>
+
+</html>

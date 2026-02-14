@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>我的首頁</title>
+    <style>
+        h1 {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body style="background-color: azure;">
+
+    <!-------------------
+    
+    標籤的顯示模式：
+
+    行內模式 inline：<span>、<a>、<img>
+    區塊模式 block (自動換行) ：<div>、<h1>～<h5>、<ul>、<table>
+    隱藏模式 none ：額外透過 CSS 的 display 屬性設定
+
+    -------------------->
+
+    <h1>我的個人資訊</h1>
+    <hr />
+    <img src="reptile/img/lizard-2732989_1280.jpg" />
+    <ul>
+        <li><a href="連結">Google</a></li>
+        <li><a href="連結">Facebook</a></li>
+    </ul>
+
+    <h2>我養的爬蟲</h2>
+    <table border="1" width="350" cellpadding="10">
+        <tr style="color: blue;">
+            <td>爬蟲物種</td>
+            <td>寵物名稱</td>
+            <td>寵物性別</td>
+        </tr>
+        <tr>
+            <td>鬆獅蜥</td>
+            <td>沒牙</td>
+            <td>母</td>
+        </tr>
+        <tr>
+            <td>豹紋守宮</td>
+            <td>葡萄皮</td>
+            <td>母</td>
+        </tr>
+        <tr>
+            <td>肥尾守宮</td>
+            <td>歪寶</td>
+            <td>母</td>
+        </tr>
+    </table>
+    <script>
+        /*
+           // 算數運算:+,-,*,/,%
+           let x = 7 % 3;
+           console.log(x);
+   
+           // 指定運算:=,+=,-=,*=,/=,%=
+           x = x + 1;
+           console.log(x);
+           // x+1 = 1+1 =2，但因為2沒有放進變數裡，所以就消失了
+           // 正確寫法：x=x+1
+   
+           // 比較運算:>,<,>=,<=,==
+           // 比較運算的結果 = 布林值
+           x = 3 < 4;
+           console.log(x);
+           // 比較運算也可以用在文字
+           x = "hello" == "hello";
+           console.log(x);
+   
+           // 單元運算:!,++,--
+           x = !x;
+           console.log(x)
+           // 布林值的反轉，上面 x = "hello" == "hello";是true
+           // x=!x; 在x前面加!，tyue被反轉成false
+           x = 3;
+           x++; //x+=1；//x=x+1
+           console.log(x);
+           // x++、x--是針對數字做運算，把資料+1或-1
+   
+           // 邏輯運算:&&(and),||(or)
+           let test = ture || false;
+           console.log(test);
+       */
+        // 請使用者輸入兩個數字，得到乘法的結果
+        // 要求使用者輸入：prompt(字串,字串) [回傳] 使用者的輸入
+        let n1 = prompt("請輸入一個數字", "");// 變數名稱=指令回傳的資料
+        let n2 = prompt("請輸入一個數字", "");
+        let result = n1 * n2;
+        console.log(result);
+
+    </script>
+</body>
+
+</html>

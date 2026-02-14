@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css?family=Muli&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Muli', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 40px;
+    background-color: #57b8f8;
+}
+
+.container {
+    display: flex;
+}
+
+h2 {
+    font-size: 32px;
+    text-align: center;
+    position: relative;
+}
+
+h4 {
+    font-size: 24px;
+    text-align: center;
+}
+
+.一般文字 {
+    text-align: center;
+    padding-top: 8px;
+}
+
+.格子 {
+    background-color: #fff;
+    padding-top: 20px;
+    padding-bottom: 50px;
+    padding-left: 70px;
+    padding-right: 70px;
+}
+
+.方案 {
+    padding-bottom: 20px;
+}
+
+.btn {
+    border: 0;
+    border-radius: 3px;
+    margin: 30px 60px;
+    padding: 15px 32px;
+    display: inline-block;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-decoration-line: none;
+}
+
+.btn-outline {
+    border: 1px solid #d4d7da;
+    transition: all 0.5s;
+}
+
+.btn-outline:hover {
+    cursor: pointer;
+    border: 1px solid #57b8f8;
+    background-color: #57b8f8;
+    color: #fff;
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.5);
+}
+
+.line {
+    content: "";
+    width: 1px;
+    height: 450px;
+    position: fixed;
+    background: #d4d7da;
+    display: inline-block;
+    margin-left: 80px;
+    bottom: 100px;
+}
