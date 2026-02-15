@@ -30,7 +30,8 @@ window.addEventListener('scroll', function () {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    fetch('./single-data.json?t=' + new Date().getTime())
+    // 加上最前面的斜槓 /，這是最穩定的寫法
+    fetch('/single-page-website/single-data.json?t=' + new Date().getTime())
         .then(res => res.json())
         .then(data => {
             // 1. 更新 Banner
