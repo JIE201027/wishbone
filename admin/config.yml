@@ -1,0 +1,47 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "img"
+public_folder: "/img"
+
+collections:
+  # --- 1. 紅紅的資料連動 ---
+  - name: "red_page"
+    label: "紅紅醫療紀錄管理"
+    files:
+      - name: "red_config"
+        label: "紅紅首頁與醫療紀錄"
+        file: "red/data.json" # <--- 加上 red/ 前綴
+        fields:
+          - { label: "主標題", name: "mainTitle", widget: "string" }
+          - { label: "副標題", name: "subTitle", widget: "string" }
+          - label: "醫療費用紀錄"
+            name: "medicalRecords"
+            widget: "list"
+            fields:
+              - { label: "日期", name: "date", widget: "string" }
+              - { label: "項目", name: "item", widget: "string" }
+              - { label: "金額", name: "cost", widget: "string" }
+
+  # --- 2. 許願骨的資料連動 ---
+  - name: "wishbone_page"
+    label: "許願骨官網管理"
+    files:
+      - name: "home_config"
+        label: "許願骨首頁與價格"
+        file: "single-page-website/single-data.json" # <--- 加上資料夾前綴
+        fields:
+          - { label: "Banner 大標題", name: "heroTitle", widget: "string" }
+          - { label: "Banner 副標題", name: "heroDesc", widget: "string" }
+          - label: "價格方案列表"
+            name: "pricing"
+            widget: "list"
+            fields:
+              - { label: "標籤", name: "tag", widget: "string" }
+              - { label: "方案名稱", name: "title", widget: "string" }
+              - { label: "價格數字", name: "price", widget: "string" }
+              - { label: "維護費備註", name: "maintenance", widget: "string" }
+              - { label: "適合對象描述", name: "target", widget: "string" }
+              - { label: "方案詳細介紹", name: "desc", widget: "text" }
+              - { label: "功能勾選清單", name: "features", widget: "list" }

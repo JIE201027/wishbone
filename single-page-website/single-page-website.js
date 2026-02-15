@@ -28,3 +28,39 @@ window.addEventListener('scroll', function () {
         nav.style.padding = '1rem 5%';
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('./single-data.json?t=' + new Date().getTime())
+        .then(res => res.json())
+        .then(data => {
+            // 1. 更新 Banner
+            document.getElementById('hero-title').innerText = data.heroTitle;
+            document.getElementById('hero-p').innerText = data.heroDesc;
+
+            // 2. 更新價格卡片
+            const container = document.getElementById('pricing-container');
+            let pricingHtml = "";
+
+            data.pricing.forEach((item, index) => {
+                // 組裝功能列表的 <li>
+                const featuresHtml = item.features.map(f => `<li>${f}</li>`).join('');
+
+                pricingHtml += `
+                    <div class="card pricing-card" data-aos="zoom-in" data-aos-delay="${index * 100}">
+                        <div class="card-header">
+                            <span class="tag">${item.tag}</span>
+                            <h3>${item.title}</h3>
+                            <div class="price">${item.price}</div>
+                            <p class="maintenance">${item.maintenance}</p>
+                        </div>
+                        <div class="card-body">
+                            <p class="target">${item.target}</p>
+                            <p class="desc">${item.desc}</p>
+                            <ul class="features">${featuresHtml}</ul>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = pricingHtml;
+        });
+});
