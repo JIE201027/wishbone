@@ -15,3 +15,11 @@ collections:
         fields:
           - { label: "大標題", name: "mainTitle", widget: "string" }
           - { label: "副標題", name: "subTitle", widget: "string" }
+          # --- 下面是新增的清單功能 ---
+          - label: "醫療費用紀錄"
+            name: "medicalRecords"
+            widget: "list"
+            fields:
+              - { label: "日期", name: "date", widget: "string" }
+              - { label: "醫療項目", name: "item", widget: "string" }
+              - { label: "金額", name: "cost", widget: "string" }

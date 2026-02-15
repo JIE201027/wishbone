@@ -186,7 +186,7 @@
         </div>
         <div class="資訊接露-2">
             <h3>二、已發生醫療費用（目前統計）</h3>
-            <p> 以下為截至目前（最後更新日）為止的金額整理，之後的詳細收據會定期上傳供大眾查看：</p>
+            <p>以下為截至目前（最後更新日）為止的金額整理，之後的詳細收據會定期上傳供大眾查看：</p>
             <table>
                 <thead>
                     <tr>
@@ -195,108 +195,14 @@
                         <th scope="col">費用</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>2025/05/06</td>
-                        <td>初診/血檢/細菌培養</td>
-                        <td>6050$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/05/14</td>
-                        <td>回診/拿藥</td>
-                        <td>1950$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/06/10</td>
-                        <td>回診/拿藥</td>
-                        <td>1950$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/06/24</td>
-                        <td>回診/拿藥</td>
-                        <td>1800$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/07/08</td>
-                        <td>回診/拿藥</td>
-                        <td>1950$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/07/22</td>
-                        <td>回診/拿藥</td>
-                        <td>1300$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/08/19</td>
-                        <td>回診/拿藥</td>
-                        <td>1500$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/09/02</td>
-                        <td>血檢/拿藥</td>
-                        <td>3500$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/09/09</td>
-                        <td>回診/拿藥</td>
-                        <td>2000$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/09/16</td>
-                        <td>回診/拿藥</td>
-                        <td>1300$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/09/23</td>
-                        <td>回診/拿藥</td>
-                        <td>1500$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/10/2</td>
-                        <td>回診/拿藥</td>
-                        <td>1500$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/10/9</td>
-                        <td>回診/拿藥</td>
-                        <td>500$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/10/30</td>
-                        <td>細菌培養/拿藥</td>
-                        <td>3200$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/11/6</td>
-                        <td>回診/拿藥</td>
-                        <td>1200$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/11/13</td>
-                        <td>回診/拿藥</td>
-                        <td>1800$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/11/20</td>
-                        <td>回診/拿藥</td>
-                        <td>2000$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/11/27</td>
-                        <td>回診/拿藥</td>
-                        <td>1500$</td>
-                    </tr>
-                    <tr>
-                        <td>2025/12/4</td>
-                        <td>回診/拿藥</td>
-                        <td>1800$</td>
-                    </tr>
 
+                <tbody id="medical-body">
                 </tbody>
+
                 <tfoot>
                     <tr>
                         <th scope="row" colspan="2">👉 目前累積金額</th>
-                        <td>NT$ 38,300</td>
+                        <td id="total-amount">NT$ 0</td>
                     </tr>
                 </tfoot>
             </table>
@@ -421,13 +327,45 @@
     </div>
 
     <script>
-        // 自動讀取 JSON 並更新網頁字體
-        fetch('./data.json')
-            .then(response => response.json())
-            .then(data => {
-                if (data.mainTitle) document.getElementById('main-title').innerText = data.mainTitle;
-                if (data.subTitle) document.getElementById('sub-title').innerText = data.subTitle;
-            });
+        document.addEventListener("DOMContentLoaded", function () {
+            const cacheBuster = "?t=" + new Date().getTime();
+            fetch('./data.json' + cacheBuster)
+                .then(res => res.json())
+                .then(data => {
+                    // 1. 原有的標題連動
+                    if (data.mainTitle) document.getElementById('main-title').innerText = data.mainTitle;
+                    if (data.subTitle) document.getElementById('sub-title').innerText = data.subTitle;
+
+                    // 2. 處理醫療費用表格
+                    const tbody = document.getElementById('medical-body');
+                    const totalTd = document.getElementById('total-amount');
+                    let sum = 0;
+
+                    if (data.medicalRecords && tbody) {
+                        let rows = "";
+                        data.medicalRecords.forEach(record => {
+                            // 累加金額 (把字串轉成數字)
+                            const costNum = parseInt(record.cost) || 0;
+                            sum += costNum;
+
+                            // 生成表格的一列
+                            rows += `
+                            <tr>
+                                <td>${record.date}</td>
+                                <td>${record.item}</td>
+                                <td>${costNum.toLocaleString()}$</td>
+                            </tr>
+                        `;
+                        });
+
+                        // 塞入 HTML
+                        tbody.innerHTML = rows;
+                        // 更新總金額 (加上千分位符號，比較專業)
+                        totalTd.innerText = "NT$ " + sum.toLocaleString();
+                    }
+                })
+                .catch(err => console.error("抓取 JSON 失敗:", err));
+        });
     </script>
 </body>
 
