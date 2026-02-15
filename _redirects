@@ -1,0 +1,7 @@
+# 1. 讓首頁直接顯示「許願骨官網」
+/        /single-page-website/single-page-website.html    200
+
+# 2. 設定簡短好記的跳轉
+/wish    /single-page-website/single-page-website.html    200
+/red     /red/index.html                                  200
+/manage  /admin/index.html                                200
