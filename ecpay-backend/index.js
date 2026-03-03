@@ -68,28 +68,36 @@ app.post('/create-payment', (req, res) => {
         // 計算 CheckMacValue
         const checkMacValue = generateCheckMacValue(base_param);
 
-        // 4. 構建輸出 HTML (包含自動提交與手動備援按鈕)
+        // 4. 構建輸出 HTML (完全移除 Script，改用純按鈕)
         let formHtml = `
         <!DOCTYPE html>
         <html>
             <head>
                 <meta charset="utf-8">
-                <title>Redirecting to ECPay...</title>
+                <title>確認撥款</title>
+                <style>
+                    body { font-family: "Microsoft JhengHei", sans-serif; text-align: center; padding: 50px; background: #f4f4f4; }
+                    .card { background: white; padding: 30px; border-radius: 10px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                    .btn { background: #ee4d2d; color: white; border: none; padding: 15px 30px; font-size: 20px; cursor: pointer; border-radius: 5px; text-decoration: none; }
+                    .btn:hover { background: #d73211; }
+                </style>
             </head>
-            <body onload="document.forms[0].submit()" style="text-align:center; padding-top:50px; font-family:sans-serif;">
-                <h3>正在導向綠界支付頁面...</h3>
-                <p>如果頁面沒有自動跳轉，請點擊下方按鈕</p>
-                
-                <form action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">`;
+            <body>
+                <div class="card">
+                    <h2>訂單準備就緒</h2>
+                    <p>請點擊下方按鈕前往綠界安全支付頁面</p>
+                    <form action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">`;
 
+        // 加入所有欄位
         for (const key in base_param) {
             formHtml += `<input type="hidden" name="${key}" value="${base_param[key]}" />`;
         }
         formHtml += `<input type="hidden" name="CheckMacValue" value="${checkMacValue}" />`;
 
         formHtml += `
-                    <button type="submit" style="padding:10px 20px; cursor:pointer;">手動前往付款</button>
-                </form>
+                        <button type="submit" class="btn">前往付款 (Go to Payment)</button>
+                    </form>
+                </div>
             </body>
         </html>`;
 
