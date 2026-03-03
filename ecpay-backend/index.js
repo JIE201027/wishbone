@@ -10,18 +10,15 @@ const HashKey = "5294y06JbISpM5x9";
 const HashIV = "v77hoKGq4kWxRRp9";
 
 function generateCheckMacValue(params) {
-    // 1. 依照字母排序
     const sortedKeys = Object.keys(params).sort();
-
-    // 2. 拼接字串
     let rawStr = `HashKey=${HashKey}`;
     for (const key of sortedKeys) {
         rawStr += `&${key}=${params[key]}`;
     }
     rawStr += `&HashIV=${HashIV}`;
 
-    // 3. URL Encode 並處理特殊符號 (綠界 V5 標準)
-    const encodedStr = encodeURIComponent(rawStr)
+    // ✅ 極度精確的綠界編碼邏輯
+    let encodedStr = encodeURIComponent(rawStr)
         .toLowerCase()
         .replace(/%20/g, '+')
         .replace(/%2d/g, '-')
@@ -40,10 +37,11 @@ app.post('/create-payment', (req, res) => {
         const { totalAmount } = req.body;
         const MerchantTradeNo = "MM" + Date.now().toString().slice(-10);
 
-        const d = new Date();
-        const MerchantTradeDate = `${d.getFullYear()}/${('0' + (d.getMonth() + 1)).slice(-2)}/${('0' + d.getDate()).slice(-2)} ${('0' + d.getHours()).slice(-2)}:${('0' + d.getMinutes()).slice(-2)}:${('0' + d.getSeconds()).slice(-2)}`;
+        // ✅ 修正時區問題：強制加 8 小時 (台灣時間)
+        const now = new Date();
+        const twTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+        const MerchantTradeDate = `${twTime.getFullYear()}/${('0' + (twTime.getMonth() + 1)).slice(-2)}/${('0' + twTime.getDate()).slice(-2)} ${('0' + twTime.getHours()).slice(-2)}:${('0' + twTime.getMinutes()).slice(-2)}:${('0' + twTime.getSeconds()).slice(-2)}`;
 
-        // 💡 採用最簡必填參數，移除可能干擾的 URL
         const base_param = {
             ChoosePayment: 'ALL',
             EncryptType: '1',

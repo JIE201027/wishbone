@@ -432,37 +432,29 @@ async function checkout(event) {
     btn.disabled = true;
 
     try {
-        console.log("正在發送請求至 Render...");
         const response = await fetch('https://ecpay-payment-demo.onrender.com/create-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ totalAmount, itemName })
         });
 
-        if (!response.ok) throw new Error("網路連線不穩定，請稍後再試");
-
         const result = await response.json();
-        console.log("收到後端回傳內容，準備開啟支付視窗");
-
         if (!result.html) throw new Error("後端回傳格式錯誤");
 
-        // 💡 5. 核心修正：使用 window.open 避開 CSP 限制
-        const paymentWindow = window.open('', '_blank');
+        // ✅ 改用 Blob 方式開啟，繞過所有 CSP 限制
+        const blob = new Blob([result.html], { type: 'text/html' });
+        const blobUrl = URL.createObjectURL(blob);
+        const paymentWindow = window.open(blobUrl, '_blank');
 
-        if (paymentWindow) {
-            // 將後端產生的完整 HTML (包含自動 submit 腳本) 寫入新視窗
-            paymentWindow.document.write(result.html);
-            paymentWindow.document.close(); // 必須關閉流，才會觸發 onload
-        } else {
-            // 如果被瀏覽器攔截彈出視窗
-            alert("請允許開啟彈出視窗，以完成金流支付！");
-        }
+        if (!paymentWindow) alert("請允許開啟彈出視窗！");
+
+        // 5秒後釋放記憶體
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
 
     } catch (error) {
-        console.error("錯誤細節：", error);
-        alert("伺服器連線超時或發生錯誤，請稍候 30 秒再試一次！");
+        console.error("錯誤：", error);
+        alert("連線失敗，請稍後再試");
     } finally {
-        // 恢復按鈕狀態
         btn.innerText = originalText;
         btn.disabled = false;
     }
