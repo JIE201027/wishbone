@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', init);
 // ==========================================
 // 💳 5. 金流結帳邏輯 (串接 Render 後端)
 // ==========================================
-async function checkout(event) {  // <--- 這裡要加上 event
+async function checkout(event) {
     // 1. 檢查購物車
     if (cart.length === 0) {
         alert("購物車是空的，先去逛逛吧！");
@@ -418,13 +418,13 @@ async function checkout(event) {  // <--- 這裡要加上 event
 
     // 3. 準備資料
     const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+    // 綠界商品名稱限制 200 字，且不建議特殊符號
     const itemName = cart.map(item => item.name).join('#').substring(0, 200);
 
     // 4. UI 回饋
-    // 現在 event 已經正確傳入，這裡就不會報錯了
     const btn = event.target;
     const originalText = btn.innerText;
-    btn.innerText = "連線金流伺服器中...";
+    btn.innerText = "伺服器喚醒中 (需時 30-60 秒)...";
     btn.disabled = true;
 
     try {
@@ -437,20 +437,39 @@ async function checkout(event) {  // <--- 這裡要加上 event
 
         if (!response.ok) throw new Error("網路連線不穩定");
 
+        // --- 核心處理開始 ---
         const result = await response.json();
+        console.log("收到後端回傳內容:", result);
 
-        // 6. 處理跳轉
+        if (!result.html) {
+            throw new Error("回傳內容不包含 HTML 表單");
+        }
+
+        // 5. 建立隱藏容器並置入綠界表單
         const div = document.createElement('div');
         div.style.display = 'none';
         div.innerHTML = result.html;
         document.body.appendChild(div);
 
-        document.getElementById("_form_aio_checkout").submit();
+        // 6. 執行跳轉 (多重備案抓取表單)
+        const form = div.querySelector('form') ||
+            div.getElementsByTagName('form')[0] ||
+            document.forms['_form_aio_checkout'];
+
+        if (form) {
+            console.log("找到表單，準備跳轉到綠界...");
+            form.submit();
+        } else {
+            console.error("解析失敗，HTML 內容為:", result.html);
+            alert("跳轉失敗，無法解析金流表單內容。");
+        }
 
     } catch (error) {
         console.error("錯誤細節：", error);
-        alert("伺服器還在起床（約需 30-50 秒），請稍候再點一次！");
+        // 判斷是否為冷啟動導致的超時
+        alert("伺服器起床中（通常需 40 秒），請稍候 10 秒後再試一次！");
     } finally {
+        // 恢復按鈕狀態
         btn.innerText = originalText;
         btn.disabled = false;
     }

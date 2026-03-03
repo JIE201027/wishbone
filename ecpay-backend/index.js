@@ -10,10 +10,11 @@ const options = {
     OperationMode: "Test",
     MercProfile: {
         MerchantID: "2000132",
-        HashKey: "5294y06Jbhkq92Zl",
-        HashIV: "v77hoKGq4kWxNNIS"
+        // ✅ 修正：換成官方指定的 2000132 專用測試 Key
+        HashKey: "5294y06JbISpM5x9",
+        HashIV: "v77hoKGq4kWxRRp9"
     },
-    IgnorePayment: [], // 修正 join 錯誤的關鍵
+    IgnorePayment: [],
     IsProjectContractor: false
 };
 
@@ -21,12 +22,14 @@ app.post('/create-payment', (req, res) => {
     try {
         const { totalAmount, itemName } = req.body;
 
-        // 確保 itemName 不為空且不含特殊字元，綠界建議用 # 分隔
+        // 確保 itemName 清潔且不超過長度
         const cleanItemName = itemName ? itemName.replace(/[^\u4e00-\u9fa5a-zA-Z0-9#]/g, '') : "ShopItem";
 
         const create = new ecpay_aio_nodejs(options);
 
         const MerchantTradeNo = "MM" + Date.now().toString().slice(-10);
+
+        // ✅ 修正：確保時間格式為 YYYY/MM/DD HH:mm:ss
         const now = new Date();
         const MerchantTradeDate = now.getFullYear() + '/' +
             ('0' + (now.getMonth() + 1)).slice(-2) + '/' +
@@ -38,7 +41,7 @@ app.post('/create-payment', (req, res) => {
         const base_param = {
             MerchantTradeNo: MerchantTradeNo,
             MerchantTradeDate: MerchantTradeDate,
-            TotalAmount: totalAmount.toString(),
+            TotalAmount: Math.floor(totalAmount).toString(), // 確保是整數
             TradeDesc: "MomMomSelectOrder",
             ItemName: cleanItemName,
             ReturnURL: "https://www.google.com",
