@@ -375,3 +375,62 @@ function removeItem(index) {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ==========================================
+// 💳 5. 金流結帳邏輯 (串接 Render 後端)
+// ==========================================
+async function checkout(event) {  // <--- 這裡要加上 event
+    // 1. 檢查購物車
+    if (cart.length === 0) {
+        alert("購物車是空的，先去逛逛吧！");
+        return;
+    }
+
+    // 2. 抓取欄位
+    const nameInput = document.querySelector('input[name="name"]');
+    const phoneInput = document.querySelector('input[name="phone"]');
+
+    if (!nameInput.value || !phoneInput.value) {
+        alert("請填寫收件人姓名與電話");
+        return;
+    }
+
+    // 3. 準備資料
+    const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+    const itemName = cart.map(item => item.name).join('#').substring(0, 200);
+
+    // 4. UI 回饋
+    // 現在 event 已經正確傳入，這裡就不會報錯了
+    const btn = event.target;
+    const originalText = btn.innerText;
+    btn.innerText = "連線金流伺服器中...";
+    btn.disabled = true;
+
+    try {
+        console.log("正在發送請求至 Render...");
+        const response = await fetch('https://ecpay-payment-demo.onrender.com/create-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ totalAmount, itemName })
+        });
+
+        if (!response.ok) throw new Error("網路連線不穩定");
+
+        const result = await response.json();
+
+        // 6. 處理跳轉
+        const div = document.createElement('div');
+        div.style.display = 'none';
+        div.innerHTML = result.html;
+        document.body.appendChild(div);
+
+        document.getElementById("_form_aio_checkout").submit();
+
+    } catch (error) {
+        console.error("錯誤細節：", error);
+        alert("伺服器還在起床（約需 30-50 秒），請稍候再點一次！");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}
