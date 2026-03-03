@@ -6,10 +6,12 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// 1. 綠界官方測試環境金鑰
 const MerchantID = "2000132";
 const HashKey = "5294y06JbISpM5x9";
 const HashIV = "v77hoKGq4kWxRRp9";
 
+// 2. 簽章計算函式 (CheckMacValue)
 function generateCheckMacValue(params) {
     const sortedKeys = Object.keys(params).sort();
     let rawStr = `HashKey=${HashKey}&` +
@@ -30,12 +32,15 @@ function generateCheckMacValue(params) {
     return crypto.createHash('sha256').update(encodedStr).digest('hex').toUpperCase();
 }
 
+// 3. 建立訂單 API
 app.post('/create-payment', (req, res) => {
     try {
         const { totalAmount } = req.body;
+
+        // 產生 10 位數隨機交易編號
         const MerchantTradeNo = "MM" + Date.now().toString().slice(-10);
 
-        // ✅ 手動拼湊時間，避開 toLocaleString 在不同作業系統的差異
+        // ✅ 手動拼湊時間字串 (YYYY/MM/DD HH:mm:ss)
         const d = new Date();
         const YYYY = d.getFullYear();
         const MM = ('0' + (d.getMonth() + 1)).slice(-2);
@@ -45,6 +50,7 @@ app.post('/create-payment', (req, res) => {
         const ss = ('0' + d.getSeconds()).slice(-2);
         const MerchantTradeDate = `${YYYY}/${MM}/${DD} ${HH}:${mm}:${ss}`;
 
+        // 綠界標準參數
         const base_param = {
             ChoosePayment: 'ALL',
             EncryptType: '1',
@@ -59,13 +65,21 @@ app.post('/create-payment', (req, res) => {
             TradeDesc: 'MomMomOrderDescription'
         };
 
+        // 計算 CheckMacValue
         const checkMacValue = generateCheckMacValue(base_param);
 
+        // 4. 構建輸出 HTML (包含自動提交與手動備援按鈕)
         let formHtml = `
         <!DOCTYPE html>
         <html>
-            <head><title>Redirecting...</title></head>
-            <body onload="document.forms[0].submit()">
+            <head>
+                <meta charset="utf-8">
+                <title>Redirecting to ECPay...</title>
+            </head>
+            <body onload="document.forms[0].submit()" style="text-align:center; padding-top:50px; font-family:sans-serif;">
+                <h3>正在導向綠界支付頁面...</h3>
+                <p>如果頁面沒有自動跳轉，請點擊下方按鈕</p>
+                
                 <form action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">`;
 
         for (const key in base_param) {
@@ -74,6 +88,7 @@ app.post('/create-payment', (req, res) => {
         formHtml += `<input type="hidden" name="CheckMacValue" value="${checkMacValue}" />`;
 
         formHtml += `
+                    <button type="submit" style="padding:10px 20px; cursor:pointer;">手動前往付款</button>
                 </form>
             </body>
         </html>`;
