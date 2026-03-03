@@ -11,13 +11,11 @@ const HashKey = "5294y06JbISpM5x9";
 const HashIV = "v77hoKGq4kWxRRp9";
 
 function generateCheckMacValue(params) {
-    // 1. 排序並組合字串
     const sortedKeys = Object.keys(params).sort();
     let rawStr = `HashKey=${HashKey}&` +
         sortedKeys.map(key => `${key}=${params[key]}`).join('&') +
         `&HashIV=${HashIV}`;
 
-    // 2. 進行 URL 編碼
     let encodedStr = encodeURIComponent(rawStr)
         .toLowerCase()
         .replace(/%20/g, '+')
@@ -37,22 +35,20 @@ app.post('/create-payment', (req, res) => {
         const { totalAmount } = req.body;
         const MerchantTradeNo = "MM" + Date.now().toString().slice(-10);
 
-        // 取得台灣時間格式 YYYY/MM/DD HH:mm:ss
-        const now = new Date();
-        const MerchantTradeDate = now.toLocaleString('zh-TW', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: false
-        }).replace(/-/g, '/');
+        // ✅ 手動拼湊時間，避開 toLocaleString 在不同作業系統的差異
+        const d = new Date();
+        const YYYY = d.getFullYear();
+        const MM = ('0' + (d.getMonth() + 1)).slice(-2);
+        const DD = ('0' + d.getDate()).slice(-2);
+        const HH = ('0' + d.getHours()).slice(-2);
+        const mm = ('0' + d.getMinutes()).slice(-2);
+        const ss = ('0' + d.getSeconds()).slice(-2);
+        const MerchantTradeDate = `${YYYY}/${MM}/${DD} ${HH}:${mm}:${ss}`;
 
         const base_param = {
             ChoosePayment: 'ALL',
             EncryptType: '1',
-            ItemName: 'MomMomStoreItem', // 絕對不要用中文或特殊符號測試
+            ItemName: 'MomMomStoreItem',
             MerchantID: MerchantID,
             MerchantTradeDate: MerchantTradeDate,
             MerchantTradeNo: MerchantTradeNo,
@@ -63,16 +59,24 @@ app.post('/create-payment', (req, res) => {
             TradeDesc: 'MomMomOrderDescription'
         };
 
-        // 計算簽章
         const checkMacValue = generateCheckMacValue(base_param);
 
-        // 構建表單 (使用綠界正式測試環境 URL)
-        let formHtml = `<form id="_form_aio_checkout" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">`;
-        Object.keys(base_param).forEach(key => {
+        let formHtml = `
+        <!DOCTYPE html>
+        <html>
+            <head><title>Redirecting...</title></head>
+            <body onload="document.forms[0].submit()">
+                <form action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">`;
+
+        for (const key in base_param) {
             formHtml += `<input type="hidden" name="${key}" value="${base_param[key]}" />`;
-        });
+        }
         formHtml += `<input type="hidden" name="CheckMacValue" value="${checkMacValue}" />`;
-        formHtml += `</form>`;
+
+        formHtml += `
+                </form>
+            </body>
+        </html>`;
 
         res.send({ html: formHtml });
 

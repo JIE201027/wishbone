@@ -400,6 +400,7 @@ document.addEventListener('DOMContentLoaded', init);
 // ==========================================
 // 💳 5. 金流結帳邏輯 (串接 Render 後端)
 // ==========================================
+
 async function checkout(event) {
     // 1. 檢查購物車
     if (cart.length === 0) {
@@ -418,13 +419,12 @@ async function checkout(event) {
 
     // 3. 準備資料
     const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
-    // 綠界商品名稱限制 200 字，且不建議特殊符號
-    const itemName = cart.map(item => item.name).join('#').substring(0, 200);
+    const itemName = "MomMomStoreOrder"; // 暫時固定，確保簽章正確
 
     // 4. UI 回饋
     const btn = event.target;
     const originalText = btn.innerText;
-    btn.innerText = "伺服器喚醒中 (需時 30-60 秒)...";
+    btn.innerText = "金流引導中...";
     btn.disabled = true;
 
     try {
@@ -435,39 +435,28 @@ async function checkout(event) {
             body: JSON.stringify({ totalAmount, itemName })
         });
 
-        if (!response.ok) throw new Error("網路連線不穩定");
+        if (!response.ok) throw new Error("網路連線不穩定，請稍後再試");
 
-        // --- 核心處理開始 ---
         const result = await response.json();
-        console.log("收到後端回傳內容:", result);
+        console.log("收到後端回傳內容，準備開啟支付視窗");
 
-        if (!result.html) {
-            throw new Error("回傳內容不包含 HTML 表單");
-        }
+        if (!result.html) throw new Error("後端回傳格式錯誤");
 
-        // 5. 建立隱藏容器並置入綠界表單
-        const div = document.createElement('div');
-        div.style.display = 'none';
-        div.innerHTML = result.html;
-        document.body.appendChild(div);
+        // 💡 5. 核心修正：使用 window.open 避開 CSP 限制
+        const paymentWindow = window.open('', '_blank');
 
-        // 6. 執行跳轉 (多重備案抓取表單)
-        const form = div.querySelector('form') ||
-            div.getElementsByTagName('form')[0] ||
-            document.forms['_form_aio_checkout'];
-
-        if (form) {
-            console.log("找到表單，準備跳轉到綠界...");
-            form.submit();
+        if (paymentWindow) {
+            // 將後端產生的完整 HTML (包含自動 submit 腳本) 寫入新視窗
+            paymentWindow.document.write(result.html);
+            paymentWindow.document.close(); // 必須關閉流，才會觸發 onload
         } else {
-            console.error("解析失敗，HTML 內容為:", result.html);
-            alert("跳轉失敗，無法解析金流表單內容。");
+            // 如果被瀏覽器攔截彈出視窗
+            alert("請允許開啟彈出視窗，以完成金流支付！");
         }
 
     } catch (error) {
         console.error("錯誤細節：", error);
-        // 判斷是否為冷啟動導致的超時
-        alert("伺服器起床中（通常需 40 秒），請稍候 10 秒後再試一次！");
+        alert("伺服器連線超時或發生錯誤，請稍候 30 秒再試一次！");
     } finally {
         // 恢復按鈕狀態
         btn.innerText = originalText;
