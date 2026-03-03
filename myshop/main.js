@@ -401,6 +401,10 @@ document.addEventListener('DOMContentLoaded', init);
 // 💳 5. 金流結帳邏輯 (串接 Render 後端)
 // ==========================================
 
+// ==========================================
+// 💳 5. 金流結帳邏輯 (串接 Render 後端)
+// ==========================================
+
 async function checkout(event) {
     // 1. 檢查購物車
     if (cart.length === 0) {
