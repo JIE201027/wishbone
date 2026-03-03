@@ -1,29 +1,23 @@
 const express = require('express');
 const cors = require('cors');
-const crypto = require('crypto'); // 內建加密模組
+const crypto = require('crypto');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// 官方測試金鑰
 const MerchantID = "2000132";
 const HashKey = "5294y06JbISpM5x9";
 const HashIV = "v77hoKGq4kWxRRp9";
 
-// 手動計算 CheckMacValue 的函式
 function generateCheckMacValue(params) {
-    // 1. 依照字母順序排序
+    // 1. 排序並組合字串
     const sortedKeys = Object.keys(params).sort();
-    let rawStr = `HashKey=${HashKey}&`;
+    let rawStr = `HashKey=${HashKey}&` +
+        sortedKeys.map(key => `${key}=${params[key]}`).join('&') +
+        `&HashIV=${HashIV}`;
 
-    sortedKeys.forEach(key => {
-        rawStr += `${key}=${params[key]}&`;
-    });
-
-    rawStr += `HashIV=${HashIV}`;
-
-    // 2. URL Encode 並處理綠界特定的符號轉換
+    // 2. 進行 URL 編碼
     let encodedStr = encodeURIComponent(rawStr)
         .toLowerCase()
         .replace(/%20/g, '+')
@@ -35,7 +29,6 @@ function generateCheckMacValue(params) {
         .replace(/%28/g, '(')
         .replace(/%29/g, ')');
 
-    // 3. SHA256 加密並轉大寫
     return crypto.createHash('sha256').update(encodedStr).digest('hex').toUpperCase();
 }
 
@@ -44,44 +37,46 @@ app.post('/create-payment', (req, res) => {
         const { totalAmount } = req.body;
         const MerchantTradeNo = "MM" + Date.now().toString().slice(-10);
 
+        // 取得台灣時間格式 YYYY/MM/DD HH:mm:ss
         const now = new Date();
-        const MerchantTradeDate = now.getFullYear() + '/' +
-            ('0' + (now.getMonth() + 1)).slice(-2) + '/' +
-            ('0' + now.getDate()).slice(-2) + ' ' +
-            ('0' + now.getHours()).slice(-2) + ':' +
-            ('0' + now.getMinutes()).slice(-2) + ':' +
-            ('0' + now.getSeconds()).slice(-2);
+        const MerchantTradeDate = now.toLocaleString('zh-TW', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        }).replace(/-/g, '/');
 
-        // 準備參數
         const base_param = {
-            MerchantID: MerchantID,
-            MerchantTradeNo: MerchantTradeNo,
-            MerchantTradeDate: MerchantTradeDate,
-            PaymentType: 'aio',
-            TotalAmount: Math.floor(totalAmount).toString(),
-            TradeDesc: 'MomMomOrder',
-            ItemName: 'MomMomProduct', // 暫用純英文
-            ReturnURL: 'https://www.google.com',
             ChoosePayment: 'ALL',
             EncryptType: '1',
+            ItemName: 'MomMomStoreItem', // 絕對不要用中文或特殊符號測試
+            MerchantID: MerchantID,
+            MerchantTradeDate: MerchantTradeDate,
+            MerchantTradeNo: MerchantTradeNo,
             OrderResultURL: 'https://www.google.com',
+            PaymentType: 'aio',
+            ReturnURL: 'https://www.google.com',
+            TotalAmount: Math.floor(totalAmount).toString(),
+            TradeDesc: 'MomMomOrderDescription'
         };
 
         // 計算簽章
-        base_param['CheckMacValue'] = generateCheckMacValue(base_param);
+        const checkMacValue = generateCheckMacValue(base_param);
 
-        // 手動產生 HTML 表單內容
+        // 構建表單 (使用綠界正式測試環境 URL)
         let formHtml = `<form id="_form_aio_checkout" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">`;
         Object.keys(base_param).forEach(key => {
             formHtml += `<input type="hidden" name="${key}" value="${base_param[key]}" />`;
         });
+        formHtml += `<input type="hidden" name="CheckMacValue" value="${checkMacValue}" />`;
         formHtml += `</form>`;
 
-        console.log("生成的簽章:", base_param['CheckMacValue']);
         res.send({ html: formHtml });
 
     } catch (err) {
-        console.error("結帳發生錯誤:", err);
         res.status(500).send({ error: err.message });
     }
 });
