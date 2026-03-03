@@ -6,25 +6,27 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// ✅ 修正點 1：必須包裹在 MercProfile 裡面
 const options = {
     OperationMode: "Test",
     MercProfile: {
         MerchantID: "2000132",
-        HashKey: "5294y06Jbhkq92Zl", // 建議使用官方測試專用 Key
-        HashIV: "v77hoKGq4kWxNNIS"   // 建議使用官方測試專用 IV
-    }
+        HashKey: "5294y06Jbhkq92Zl",
+        HashIV: "v77hoKGq4kWxNNIS"
+    },
+    IgnorePayment: [], // 修正 join 錯誤的關鍵
+    IsProjectContractor: false
 };
 
 app.post('/create-payment', (req, res) => {
     try {
         const { totalAmount, itemName } = req.body;
+
+        // 確保 itemName 不為空且不含特殊字元，綠界建議用 # 分隔
+        const cleanItemName = itemName ? itemName.replace(/[^\u4e00-\u9fa5a-zA-Z0-9#]/g, '') : "ShopItem";
+
         const create = new ecpay_aio_nodejs(options);
 
-        // ✅ 修正點 2：綠界訂單號英數混合不可超過 20 字
         const MerchantTradeNo = "MM" + Date.now().toString().slice(-10);
-
-        // 修正時間格式為 YYYY/MM/DD HH:mm:ss
         const now = new Date();
         const MerchantTradeDate = now.getFullYear() + '/' +
             ('0' + (now.getMonth() + 1)).slice(-2) + '/' +
@@ -38,20 +40,21 @@ app.post('/create-payment', (req, res) => {
             MerchantTradeDate: MerchantTradeDate,
             TotalAmount: totalAmount.toString(),
             TradeDesc: "MomMomSelectOrder",
-            ItemName: itemName,
+            ItemName: cleanItemName,
             ReturnURL: "https://www.google.com",
             OrderResultURL: "https://www.google.com",
             ChoosePayment: "ALL",
             EncryptType: "1",
         };
 
+        // 產生 HTML
         const html = create.payment_client.aio_check_out_all(base_param);
         res.send({ html });
     } catch (err) {
         console.error("結帳發生錯誤:", err);
-        res.status(500).send({ error: err.message });
+        res.status(500).send({ error: "SDK 產生表單失敗: " + err.message });
     }
 });
 
-const PORT = process.env.PORT || 10000; // Render 建議用 10000
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

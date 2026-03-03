@@ -187,35 +187,56 @@ function renderProducts() {
 
     productList.innerHTML = Object.keys(productData).map(id => {
         const p = productData[id];
-        // 處理優點清單 <li>
+
+        // 1. 先把 features 陣列轉成 <li> 清單
         const featureHtml = p.features.map(f => `<li>${f}</li>`).join('');
+
+        // 2. 判斷是否有規格選項
+        const hasOptions = (p.colorOptions && p.colorOptions.length > 0) ||
+            (p.sizeOptions && p.sizeOptions.length > 0);
 
         return `
             <div class="col-md-6 col-lg-4">
                 <div class="product-item">
                     <div class="img-wrapper mb-3" onclick="openProductModal('${id}')">
                         <img src="${p.images[0]}" alt="${p.name}">
-                        <button class="add-to-cart-overlay add-to-cart" data-id="${id}">加入購物車</button>
+                        <div class="add-to-cart-overlay">查看詳情 / 選擇規格</div>
                     </div>
+                    
                     <h5 class="p-name fw-bold">${p.name}</h5>
                     <p class="text-muted small px-3">${p.desc}</p>
                     
-                    <ul>
+                    <ul class="product-features text-start small px-4 mb-3">
                         ${featureHtml}
                     </ul>
 
-                    <span class="p-price-display fw-bold">NT$ <span class="p-price">${p.price}</span></span>
+                    <div class="mt-auto">
+                        <span class="p-price-display fw-bold d-block mb-3">NT$ <span class="p-price">${p.price}</span></span>
+                        
+                        <div class="px-3 pb-3">
+                            <button class="btn btn-outline-dark w-100 fw-bold action-btn" data-id="${id}">
+                                ${hasOptions ? '選擇規格' : '快速加入'}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
     }).join('');
 
-    // 渲染完後，才綁定「加入購物車」按鈕點擊事件 (因為按鈕是動態生成的)
-    document.querySelectorAll('.add-to-cart').forEach(btn => {
+    // 重新綁定點擊事件
+    document.querySelectorAll('.action-btn').forEach(btn => {
         btn.onclick = (e) => {
-            e.stopPropagation(); // 阻止觸發彈窗
             const id = btn.dataset.id;
-            addToCart({ id, name: productData[id].name, price: productData[id].price });
+            const p = productData[id];
+            const hasOptions = (p.colorOptions && p.colorOptions.length > 0) ||
+                (p.sizeOptions && p.sizeOptions.length > 0);
+
+            if (hasOptions) {
+                openProductModal(id);
+            } else {
+                addToCart({ id, name: p.name, price: p.price });
+            }
         };
     });
 }
