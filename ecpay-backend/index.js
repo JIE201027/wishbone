@@ -5,11 +5,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const MerchantID = "2000132";
-const HashKey = "5294y06JbISpM5x9";
-const HashIV = "v77hoKGq4kWxRRp9";
+// 🏆 換成綠界官方 2856 文件指定的最新測試特店資料
+const MerchantID = "3002607";
+const HashKey = "pwFHCqoQZGmho4w6";
+const HashIV = "EkRm7iFT261dpevs";
 
-// 🏆 綠界官方最嚴格的簽章算法
 function generateCheckMacValue(params) {
     const sortedKeys = Object.keys(params).sort();
     let rawStr = `HashKey=${HashKey}`;
@@ -18,7 +18,7 @@ function generateCheckMacValue(params) {
     }
     rawStr += `&HashIV=${HashIV}`;
 
-    // 必須嚴格遵守這個轉義順序
+    // 綠界標準編碼規則
     let encodedStr = encodeURIComponent(rawStr)
         .toLowerCase()
         .replace(/%20/g, '+')
@@ -36,46 +36,36 @@ function generateCheckMacValue(params) {
 app.post('/create-payment', (req, res) => {
     try {
         const { totalAmount } = req.body;
-
-        // 1. 產生 10 位數交易編號
         const MerchantTradeNo = "MM" + Date.now().toString().slice(-10);
 
-        // 2. 修正時區 (Render 是 UTC，我們強制轉台灣 GMT+8)
+        // 取得台灣時間
         const now = new Date();
         const twTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
-        const YYYY = twTime.getFullYear();
-        const MM = ('0' + (twTime.getMonth() + 1)).slice(-2);
-        const DD = ('0' + twTime.getDate()).slice(-2);
-        const HH = ('0' + twTime.getHours()).slice(-2);
-        const mm = ('0' + twTime.getMinutes()).slice(-2);
-        const ss = ('0' + twTime.getSeconds()).slice(-2);
-        const MerchantTradeDate = `${YYYY}/${MM}/${DD} ${HH}:${mm}:${ss}`;
+        const MerchantTradeDate = `${twTime.getFullYear()}/${('0' + (twTime.getMonth() + 1)).slice(-2)}/${('0' + twTime.getDate()).slice(-2)} ${('0' + twTime.getHours()).slice(-2)}:${('0' + twTime.getMinutes()).slice(-2)}:${('0' + twTime.getSeconds()).slice(-2)}`;
 
-        // 3. 準備參數 (順序不重要，由 function 排序)
         const base_param = {
             ChoosePayment: 'ALL',
             EncryptType: '1',
-            ItemName: 'MomMomStoreItem',
+            ItemName: 'MomMomStoreGoods', // 固定簡單名稱
             MerchantID: MerchantID,
             MerchantTradeDate: MerchantTradeDate,
             MerchantTradeNo: MerchantTradeNo,
             PaymentType: 'aio',
             ReturnURL: 'https://www.ecpay.com.tw',
             TotalAmount: Math.floor(totalAmount).toString(),
-            TradeDesc: 'MomMomOrder'
+            TradeDesc: 'MomMomOrderDesc'
         };
 
         const checkMacValue = generateCheckMacValue(base_param);
 
-        // 4. 回傳包含按鈕的 HTML
         let formHtml = `
         <!DOCTYPE html>
         <html>
             <head><meta charset="utf-8"></head>
             <body style="text-align: center; padding-top: 50px; font-family: sans-serif;">
-                <div style="border: 2px solid #ee4d2d; display: inline-block; padding: 30px; border-radius: 15px;">
-                    <h2>訂單確認成功</h2>
-                    <p>金額：NT$ ${totalAmount}</p>
+                <div style="border: 2px solid #000; display: inline-block; padding: 30px; border-radius: 10px;">
+                    <h2>訂單計算完成 (ID: ${MerchantID})</h2>
+                    <p>應付金額：NT$ ${totalAmount}</p>
                     <form action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="post">`;
 
         for (const key in base_param) {
@@ -83,8 +73,8 @@ app.post('/create-payment', (req, res) => {
         }
         formHtml += `<input type="hidden" name="CheckMacValue" value="${checkMacValue}" />`;
         formHtml += `
-                        <button type="submit" style="background:#ee4d2d; color:white; border:none; padding:15px 30px; font-size:18px; border-radius:5px; cursor:pointer;">
-                            確認前往綠界付款
+                        <button type="submit" style="background:#000; color:#fff; border:none; padding:15px 30px; font-size:18px; cursor:pointer; border-radius:5px;">
+                            前往綠界測試刷卡頁
                         </button>
                     </form>
                 </div>
@@ -92,7 +82,6 @@ app.post('/create-payment', (req, res) => {
         </html>`;
 
         res.send({ html: formHtml });
-
     } catch (err) {
         res.status(500).send({ error: err.message });
     }
