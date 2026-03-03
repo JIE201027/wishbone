@@ -10,7 +10,6 @@ const options = {
     OperationMode: "Test",
     MercProfile: {
         MerchantID: "2000132",
-        // ✅ 修正：換成官方指定的 2000132 專用測試 Key
         HashKey: "5294y06JbISpM5x9",
         HashIV: "v77hoKGq4kWxRRp9"
     },
@@ -41,9 +40,10 @@ app.post('/create-payment', (req, res) => {
         const base_param = {
             MerchantTradeNo: MerchantTradeNo,
             MerchantTradeDate: MerchantTradeDate,
-            TotalAmount: Math.floor(totalAmount).toString(), // 確保是整數
-            TradeDesc: "MomMomSelectOrder",
-            ItemName: cleanItemName,
+            TotalAmount: Math.floor(totalAmount).toString(),
+            TradeDesc: "MomMomOrder",
+            // 🚀 關鍵修正：暫時將 ItemName 改成純英文，避免編碼造成簽章錯誤
+            ItemName: "MomMomSelectProduct",
             ReturnURL: "https://www.google.com",
             OrderResultURL: "https://www.google.com",
             ChoosePayment: "ALL",
