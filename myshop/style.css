@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    color: #444;
+    background-color: #fff;
+}
+
+.tracking-widest {
+    letter-spacing: 0.2rem;
+}
+
+/**************************************
+navbar 導覽列
+**************************************/
+
+.navbar-brand {
+    font-size: 1.25rem;
+    /* 調整品牌文字大小 */
+    color: #333;
+}
+
+.navbar-brand:hover .brand-text {
+    color: #666;
+    transition: color 0.5s ease;
+    /* 滑鼠移上去時文字稍微變淡，增加互動感 */
+}
+
+.brand-text {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* 在極小螢幕上縮小 Logo，避免擠壓到購物車 */
+@media (max-width: 375px) {
+    .navbar-brand img {
+        height: 30px !important;
+    }
+
+    .brand-text {
+        font-size: 1.1rem;
+    }
+}
+
+/**************************************
+ 右上購物車按鈕
+**************************************/
+
+/* 購物車連結容器 */
+.nav-link.position-relative {
+    transition: all 0.3s ease;
+    /* 讓所有變化都有平滑過渡 */
+    display: inline-block;
+}
+
+/* 滑鼠移上去時的動作 */
+.nav-link.position-relative:hover {
+    transform: translateY(-1px);
+    /* 向上微浮動 */
+    color: #000;
+    /* 確保顏色變深 */
+}
+
+/* 針對內部的圖示做縮放 */
+.nav-link.position-relative:hover i {
+    transform: scale(1.1);
+    /* 圖示放大 1.1 倍 */
+    transition: transform 0.2s ease;
+}
+
+/* 購物車數字標籤 (Badge) 的 hover 效果 */
+.nav-link.position-relative:hover .badge {
+    background-color: #555 !important;
+    /* 數字背景稍微變色 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/**************************************
+ 商品卡片
+**************************************/
+
+/* 商品卡片樣式 */
+.product-item {
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+}
+
+.img-wrapper {
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    aspect-ratio: 1 / 1;
+}
+
+.img-wrapper img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    /* 強制圖片變成正方形 */
+    object-fit: cover;
+    /* 圖片會填滿且不變形，多餘的部分會被裁切 */
+    transition: transform 0.6s ease;
+}
+
+.product-item:hover img {
+    transform: scale(1.05);
+}
+
+/* 1. 增加標題下方的間距，拉開與描述的距離 */
+.product-item h5.p-name {
+    margin-top: 30px;
+    /* 標題與圖片的距離 */
+    margin-bottom: 12px;
+    /* 標題與描述文字的距離 (這就是你要的 padding 效果) */
+    line-height: 1.4;
+}
+
+/* 2. 針對描述文字 (desc) 增加頂部間距與左右內縮 */
+.product-item p.text-muted.small {
+    padding-left: 15px;
+    /* 增加左右內縮，讓文字不要貼到邊框 */
+}
+
+/* 針對商品卡片內的列表排版 */
+.product-item ul {
+    display: inline-block;
+    /* 讓清單容器只佔據文字寬度 */
+    text-align: left;
+    /* 讓裡面的文字靠左對齊 */
+    padding-left: 0;
+    /* 移除預設內縮 */
+    list-style: none;
+    /* 移除預設黑點 (因為已經有 emoji 了) */
+    margin-bottom: 15px;
+}
+
+.product-item li {
+    font-size: 0.85rem;
+    /* 稍微縮小一點點，看起來更精緻 */
+    color: #666;
+    /* 稍微變灰，讓層次感分明 */
+    line-height: 1.6;
+    /* 增加行高，看起來不擁擠 */
+}
+
+/* 修改價格顯示，強迫它換行並置中 */
+.p-price-display {
+    display: block;
+    /* 強制換行 */
+    width: 100%;
+    /* 佔滿寬度 */
+    text-align: center;
+    /* 文字置中 */
+    font-size: 1.25rem;
+    /* 稍微放大價格，讓它更吸睛 */
+    color: #000;
+    /* 價格用深色或品牌色 */
+}
+
+/* 確保價格內的小數字也是粗體 */
+.p-price {
+    font-weight: 700;
+}
+
+/**************************************
+商品卡片彈跳視窗內容
+**************************************/
+
+.modal-main-img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+/* 購物車跳動動畫 */
+@keyframes cartBounce {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.cart-bounce {
+    animation: cartBounce 0.4s ease-in-out;
+}
+
+/* 1. 移除彈窗 Header 的空間，讓圖片貼齊頂部 */
+#productModal .modal-header {
+    padding: 0;
+    border: none;
+    position: absolute;
+    /* 讓關閉按鈕浮在圖片上方 */
+    right: 15px;
+    top: 15px;
+    z-index: 1051;
+    /* 確保按鈕在最前面 */
+}
+
+/* 2. 強制移除 modal-body 的內邊距 (如果你 HTML 已經加了 p-0 可省略，但建議加上以防萬一) */
+#productModal .modal-body {
+    padding: 0 !important;
+}
+
+/* 3. 確保輪播圖片在彈窗中是圓角的且沒有多餘邊距 */
+.modal-content {
+    overflow: hidden;
+    /* 確保圖片不會超出圓角 */
+}
+
+/* 4. 針對行動裝置的微調：確保圖片在手機上不會太高 */
+@media (max-width: 768px) {
+    .modal-main-img {
+        aspect-ratio: 1 / 1;
+    }
+}
+
+/* 彈窗文字的排版 */
+
+#modal-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    /* 增加行高，長文字才好閱讀 */
+    color: #555;
+    /* 顏色稍微深一點點 */
+    letter-spacing: 0.3px;
+    /* 增加一點字距，更有質感 */
+    white-space: pre-line;
+    /* 重要：這能讓你在 JS 寫的 \n 換行符號生效 */
+}
+
+/* 針對彈跳視窗內的價格進行設定 */
+#modal-price {
+    color: #e74c3c !important;
+    /* 這裡可以換成你喜歡的顏色，例如紅色系 */
+    font-size: 1.5rem;
+    /* 讓價格大一點，吸引注意 */
+    font-weight: 800;
+    /* 讓價格更粗一點 */
+    margin-bottom: 10px;
+    /* 增加與下方說明的間距 */
+    display: block;
+    /* 確保它是獨立一行 */
+}
+
+/* 1. 鎖定彈窗外殼：寬度與高度固定 */
+@media (min-width: 768px) {
+    #productModal .modal-dialog {
+        max-width: 900px;
+        /* 固定寬度 */
+    }
+
+    #productModal .modal-content {
+        height: 450px;
+        /* 固定總高度 (這決定了你的卡片大小) */
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #productModal .modal-body {
+        height: 100%;
+        padding: 0;
+    }
+
+    /* 讓 row 撐滿高度 */
+    #productModal .row.g-0 {
+        height: 100%;
+    }
+
+    /* 2. 左側圖片：強制正方形 (基於 450px 高度) */
+    #productModal .col-md-6:first-child {
+        height: 450px;
+        width: 450px;
+        /* 寬高一致 = 完美正方形 */
+        flex: 0 0 450px;
+    }
+
+    /* 3. 右側資訊：鎖定高度並開啟內部捲動 */
+    #productModal .col-md-6.p-4 {
+        height: 450px;
+        overflow-y: auto;
+        /* 內容太多會在這裡內部捲動 */
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+}
+
+/* 4. 圖片填滿設定 */
+#modal-images,
+.carousel-item,
+.modal-main-img {
+    height: 100%;
+    width: 100%;
+}
+
+.modal-main-img {
+    object-fit: cover;
+    /* 確保不變形 */
+}
+
+/* 5. 美化內部捲動條 */
+#productModal .col-md-6.p-4::-webkit-scrollbar {
+    width: 6px;
+}
+
+#productModal .col-md-6.p-4::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* 調整 X 按鈕位置，避免擋到捲軸 */
+#productModal .btn-close {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 1060;
+    /* 確保在最上層 */
+    background-color: rgba(255, 255, 255, 0.7);
+    /* 給它一個半透明底色，讓它在圖片上也能看見 */
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+#productModal .btn-close:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: rotate(90deg);
+    /* 增加一點互動感 */
+}
+
+/* 左右切換箭頭樣式強化 */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 40px;
+    /* 縮小感應範圍，才不會誤點 */
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.3);
+    /* 深色半透明圓底 */
+    border-radius: 50%;
+    top: 50%;
+    /* 置中 */
+    transform: translateY(-50%);
+    margin: 0 10px;
+    /* 離邊緣一點距離 */
+    opacity: 0.8;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    opacity: 1;
+}
+
+/* 讓箭頭圖標變小一點，看起來更精緻 */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/**************************************
+購物車樣式
+**************************************/
+
+/* 懸浮加入按鈕 */
+.add-to-cart-overlay {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    transition: bottom 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.product-item:hover .add-to-cart-overlay {
+    bottom: 0;
+}
+
+/* 簡約輸入框 */
+.form-control-custom {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding: 12px 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-control-custom:focus {
+    border-bottom: 1px solid #000;
+}
+
+/* 購物車列表樣式 */
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btn-remove:hover {
+    color: #ff4d4d;
+}
