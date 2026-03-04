@@ -39,18 +39,16 @@ function generateCheckMacValue(params) {
 // 🚛 新增：物流門市選擇路由
 // ==========================================
 app.post('/create-logistics-map', (req, res) => {
-    // 這裡我們產生跳轉到綠界地圖的 HTML
     const base_param = {
         MerchantID: MerchantID,
         LogisticsType: 'CVS',
-        LogisticsSubset: 'UNIMART', // 預設 7-11，也可以由前端傳入 (FAMI, HILIFE)
-        IsCollection: 'Y',          // 是否代收貨款
-        ServerReplyURL: 'https://ecpay-payment-demo.onrender.com/logistics-callback', // ⚠️ 這裡要換成你部署後的網址
-        ExtraData: 'Order123',      // 可選，紀錄訂單編號
-        Device: '0'                 // 0: PC, 1: Mobile
+        LogisticsSubset: 'UNIMART', // ✨ 確保拼字是 Subset，最後是 t
+        IsCollection: 'Y',
+        ServerReplyURL: 'https://ecpay-payment-demo.onrender.com/logistics-callback',
+        ExtraData: 'Order123',
+        Device: '0'
     };
 
-    // 物流地圖不需要 CheckMacValue，但綠界規定某些欄位必填
     let formHtml = `
     <!DOCTYPE html>
     <html>
@@ -61,7 +59,6 @@ app.post('/create-logistics-map', (req, res) => {
     }
     formHtml += `</form></body></html>`;
 
-    // ✨ 修改這裡：不要包成物件，直接傳 HTML 字串
     res.send(formHtml);
 });
 
@@ -74,7 +71,7 @@ app.post('/logistics-callback', (req, res) => {
 
     // 綠界選完後會回傳：CVSStoreName (門市名), CVSStoreID (門市店號), CVSAddress (門市地址)
     // 我們將這些資訊透過網址傳回前端的結帳頁面
-    const frontendUrl = "http://127.0.0.1:5500/index.html"; // ⚠️ 換成你的前端首頁或結帳頁
+    const frontendUrl = "http://127.0.0.1:5500/myshop/index.html"; // ⚠️ 換成你的前端首頁或結帳頁
     const params = new URLSearchParams({
         storeName: data.CVSStoreName,
         storeId: data.CVSStoreID,
