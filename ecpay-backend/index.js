@@ -39,26 +39,32 @@ function generateCheckMacValue(params) {
 // 🚛 新增：物流門市選擇路由
 // ==========================================
 app.post('/create-logistics-map', (req, res) => {
+    // 根據官方文件 (https://developers.ecpay.com.tw/7398/) 調整參數名稱
     const base_param = {
-        MerchantID: MerchantID,
-        LogisticsType: 'CVS',
-        LogisticsSubset: 'UNIMART', // ✨ 確保拼字是 Subset，最後是 t
-        IsCollection: 'Y',
-        ServerReplyURL: 'https://ecpay-payment-demo.onrender.com/logistics-callback',
-        ExtraData: 'Order123',
-        Device: '0'
+        MerchantID: MerchantID,      // 3002607
+        LogisticsType: 'CVS',       // 必填，固定為 CVS
+        LogisticsSubType: 'UNIMART', // ✨ 修正：文件規範電子地圖應使用 LogisticsSubType 且 UNIMART 須大寫
+        IsCollection: 'Y',          // 必填，代收貨款 Y/N
+        ServerReplyURL: 'https://ecpay-payment-demo.onrender.com/logistics-callback', // 門市選完後的通知網址
+        ExtraData: '',              // 可選，額外資訊
+        Device: '0'                 // 0: PC版, 1: 行動裝置版
     };
 
+    // 產生 HTML 自動提交表單
     let formHtml = `
     <!DOCTYPE html>
     <html>
+        <head><meta charset="utf-8"></head>
         <body onload="document.forms[0].submit()">
             <form action="https://logistics-stage.ecpay.com.tw/Express/map" method="post">`;
+
     for (const key in base_param) {
         formHtml += `<input type="hidden" name="${key}" value="${base_param[key]}" />`;
     }
+
     formHtml += `</form></body></html>`;
 
+    // 直接發送 HTML 給前端執行跳轉
     res.send(formHtml);
 });
 
