@@ -29,7 +29,7 @@ const productData = {
     "m02": {
         name: "8 號球簡約植絨地毯",
         price: 480,
-        desc: "簡約植絨美式地毯，有質感的居家裝飾。",
+        desc: "簡約美式地毯，有質感的居家裝飾。",
 
         // 使用反引號 ` 開頭與結尾，裡面可以直接換行
         modalDesc: `(1) 顏色：簡約黑
@@ -145,7 +145,7 @@ const productData = {
     "m06": {
         name: "外星人 3D 公仔",
         price: 200,
-        desc: "簡約植絨美式地毯，有質感的居家裝飾。",
+        desc: "特色公仔擺設，隨身陪伴的居家裝飾！",
 
         // 使用反引號 ` 開頭與結尾，裡面可以直接換行
         modalDesc: `(1) 材質：PLA
@@ -162,10 +162,10 @@ const productData = {
         images: [
             "img/外星人3D公仔/19.png",
             "img/外星人3D公仔/20.png",
-            "img//外星人3D公仔/21.png",
-            "img//外星人3D公仔/22.png",
-            "/外星人3D公仔/23.png",
-            "/外星人3D公仔/O1CN01sFAufZ2FCbqvTYP3M_!!2217503348844-0-cib.jpg"
+            "img/外星人3D公仔/21.png",
+            "img/外星人3D公仔/22.png",
+            "img/外星人3D公仔/23.png",
+            "img/外星人3D公仔/O1CN01sFAufZ2FCbqvTYP3M_!!2217503348844-0-cib.jpg"
         ]
     },
 };
@@ -176,8 +176,9 @@ let cart = [];
 // 🏗️ 2. 初始化與自動渲染
 // ==========================================
 function init() {
-    renderProducts(); // 第一步：自動把資料庫變成 HTML 卡片
-    render();         // 第二步：初始化購物車狀態
+    renderProducts();       // 第一步：自動把資料庫變成 HTML 卡片
+    render();               // 第二步：初始化購物車狀態
+    checkLogisticsReturn(); // ✨ 第三步：檢查網址是否有綠界回傳的門市資訊
 }
 
 // 自動生成首頁商品卡片
@@ -185,22 +186,17 @@ function renderProducts() {
     const productList = document.getElementById('product-list');
     if (!productList) return;
 
+    // 1. 生成所有商品的 HTML 卡片
     productList.innerHTML = Object.keys(productData).map(id => {
         const p = productData[id];
-
-        // 1. 先把 features 陣列轉成 <li> 清單
         const featureHtml = p.features.map(f => `<li>${f}</li>`).join('');
-
-        // 2. 判斷是否有規格選項
-        const hasOptions = (p.colorOptions && p.colorOptions.length > 0) ||
-            (p.sizeOptions && p.sizeOptions.length > 0);
 
         return `
             <div class="col-md-6 col-lg-4">
                 <div class="product-item">
                     <div class="img-wrapper mb-3" onclick="openProductModal('${id}')">
                         <img src="${p.images[0]}" alt="${p.name}">
-                        <div class="add-to-cart-overlay">查看詳情 / 選擇規格</div>
+                        <div class="add-to-cart-overlay">查看詳情 / 加入購物車</div>
                     </div>
                     
                     <h5 class="p-name fw-bold">${p.name}</h5>
@@ -209,13 +205,14 @@ function renderProducts() {
                     <ul class="product-features text-start small px-4 mb-3">
                         ${featureHtml}
                     </ul>
-
+                    
                     <div class="mt-auto">
-                        <span class="p-price-display fw-bold d-block mb-3">NT$ <span class="p-price">${p.price}</span></span>
-                        
+                        <span class="p-price-display fw-bold d-block mb-3">
+                            NT$ <span class="p-price">${p.price}</span>
+                        </span>
                         <div class="px-3 pb-3">
                             <button class="btn btn-outline-dark w-100 fw-bold action-btn" data-id="${id}">
-                                ${hasOptions ? '選擇規格' : '快速加入'}
+                                查看詳情 / 加入購物車
                             </button>
                         </div>
                     </div>
@@ -224,44 +221,43 @@ function renderProducts() {
         `;
     }).join('');
 
-    // 重新綁定點擊事件
+    // 2. 統一綁定點擊事件
     document.querySelectorAll('.action-btn').forEach(btn => {
-        btn.onclick = (e) => {
+        btn.onclick = () => {
             const id = btn.dataset.id;
-            const p = productData[id];
-            const hasOptions = (p.colorOptions && p.colorOptions.length > 0) ||
-                (p.sizeOptions && p.sizeOptions.length > 0);
-
-            if (hasOptions) {
-                openProductModal(id);
-            } else {
-                addToCart({ id, name: p.name, price: p.price });
-            }
+            openProductModal(id);
         };
     });
 }
 
-// 1. 在 JS 最上方定義兩個變數，紀錄目前的選取狀態
+// 變數紀錄選取狀態
 let selectedColor = "";
 let selectedSize = "";
 
 // ==========================================
-// 🖼️ 3. 詳情彈窗邏輯 (支援 顏色 + 尺寸)
+// 🖼️ 3. 詳情彈窗邏輯 (支援 數量、顏色、尺寸)
 // ==========================================
+function changeModalQty(amt) {
+    const qtyInput = document.getElementById('modal-qty');
+    let newQty = parseInt(qtyInput.value) + amt;
+    if (newQty < 1) newQty = 1;
+    qtyInput.value = newQty;
+}
+
+// 修改原本的 openProductModal，確保每次打開都重置數量
 function openProductModal(id) {
     const data = productData[id];
     if (!data) return;
 
-    // A. 重置選中狀態
     selectedColor = "";
     selectedSize = "";
+    document.getElementById('modal-qty').value = 1; // ✨ 重置數量為 1
 
-    // B. 基本內容填充
     document.getElementById('modal-title').innerText = data.name;
     document.getElementById('modal-price').innerText = `NT$ ${data.price}`;
     document.getElementById('modal-desc').innerText = data.modalDesc || data.desc;
 
-    // C. 渲染顏色選項 (Color Options)
+    // 渲染顏色選項 (Color Options)
     const colorWrapper = document.getElementById('modal-color-wrapper');
     const colorBtns = document.getElementById('modal-color-btns');
     if (data.colorOptions && data.colorOptions.length > 0) {
@@ -274,7 +270,7 @@ function openProductModal(id) {
         colorWrapper.style.display = 'none';
     }
 
-    // D. 渲染尺寸選項 (Size Options)
+    // 渲染尺寸選項 (Size Options)
     const sizeWrapper = document.getElementById('modal-size-wrapper');
     const sizeBtns = document.getElementById('modal-size-btns');
     if (data.sizeOptions && data.sizeOptions.length > 0) {
@@ -287,7 +283,7 @@ function openProductModal(id) {
         sizeWrapper.style.display = 'none';
     }
 
-    // E. 渲染圖片輪播
+    // 渲染圖片輪播
     const carouselInner = document.getElementById('modal-images');
     carouselInner.innerHTML = data.images.map((img, index) => `
         <div class="carousel-item ${index === 0 ? 'active' : ''}">
@@ -295,13 +291,12 @@ function openProductModal(id) {
         </div>
     `).join('');
 
-    // F. 加入購物袋按鈕邏輯
+    // --- 修正 A: 加入購物袋按鈕 (點擊後應該是關閉視窗，不是打開) ---
     document.getElementById('modal-add-btn').onclick = () => {
-        // 防呆檢查
         if (data.colorOptions && !selectedColor) { alert("請選擇顏色！"); return; }
         if (data.sizeOptions && !selectedSize) { alert("請選擇尺寸！"); return; }
 
-        // 組合最終規格字串：例如 (米白色 / 38-39)
+        const qty = parseInt(document.getElementById('modal-qty').value);
         let specs = [];
         if (selectedColor) specs.push(selectedColor);
         if (selectedSize) specs.push(selectedSize);
@@ -311,15 +306,20 @@ function openProductModal(id) {
         addToCart({
             id: id,
             name: finalName,
-            price: data.price
+            price: data.price,
+            qty: qty
         });
 
+        // 加入後自動關閉視窗
         const modalEl = document.getElementById('productModal');
-        bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+        const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        bsModal.hide(); // ✨ 這裡應該是 hide，因為已經加進購物車了
     };
 
+    // --- 修正 B: 函式最後，「立即」打開視窗 ---
     const modalEl = document.getElementById('productModal');
-    bootstrap.Modal.getOrCreateInstance(modalEl).show();
+    const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl); // ✨ 使用 getOrCreateInstance 避免重複初始化
+    bsModal.show(); // ✨ 讓視窗跳出來！
 }
 
 // ==========================================
@@ -347,16 +347,29 @@ function updateOptionUI(btnElement) {
 }
 
 // ==========================================
-// 🛒 4. 購物車邏輯 (核心功能)
+// 🛒 4. 購物車邏輯 (核心功能 - 支援數量計算)
 // ==========================================
+
 function addToCart(item) {
-    cart.push(item);
+    // 檢查購物車是否已有相同「名稱」(包含規格) 的商品
+    const existingItem = cart.find(i => i.name === item.name);
+
+    if (existingItem) {
+        // 如果已存在，直接增加數量
+        existingItem.qty += item.qty;
+    } else {
+        // 如果不存在，整筆加入
+        cart.push(item);
+    }
+
     render();
 
     // 購物車圖示跳動動畫
     const cartIcon = document.querySelector('.nav-link.position-relative');
-    cartIcon.classList.add('cart-bounce');
-    setTimeout(() => cartIcon.classList.remove('cart-bounce'), 400);
+    if (cartIcon) {
+        cartIcon.classList.add('cart-bounce');
+        setTimeout(() => cartIcon.classList.remove('cart-bounce'), 400);
+    }
 }
 
 function render() {
@@ -365,8 +378,11 @@ function render() {
     const countDisplay = document.getElementById('cart-count');
     const summaryInput = document.getElementById('cart_summary');
 
-    countDisplay.innerText = cart.length;
+    // 1. 計算總件數 (例如：2個吊飾+1個地毯 = 3件)
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+    countDisplay.innerText = totalQty;
 
+    // 2. 檢查空清單
     if (cart.length === 0) {
         cartList.innerHTML = '<p class="text-center text-muted">清單目前是空的</p>';
         totalDisplay.innerText = '0';
@@ -374,20 +390,28 @@ function render() {
         return;
     }
 
+    // 3. 渲染 HTML (顯示單價 x 數量)
     cartList.innerHTML = cart.map((item, index) => `
-        <div class="cart-item-row">
+        <div class="cart-item-row d-flex justify-content-between align-items-center mb-3">
             <div>
-                <span class="fw-bold">${item.name}</span>
-                <button class="btn-remove ms-2" onclick="removeItem(${index})">移除</button>
+                <div class="fw-bold">${item.name}</div>
+                <div class="small text-muted">NT$ ${item.price} x ${item.qty}</div>
             </div>
-            <span>NT$ ${item.price}</span>
+            <div class="text-end">
+                <div class="fw-bold">NT$ ${(item.price * item.qty).toLocaleString()}</div>
+                <button class="btn-remove btn btn-sm p-0 text-danger" onclick="removeItem(${index})">移除</button>
+            </div>
         </div>
     `).join('');
 
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    // 4. 計算總金額
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     totalDisplay.innerText = total.toLocaleString();
 
-    if (summaryInput) summaryInput.value = cart.map(i => i.name).join(', ');
+    // 5. 更新隱藏欄位 (讓 Netlify 收到包含數量的明細)
+    if (summaryInput) {
+        summaryInput.value = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
+    }
 }
 
 function removeItem(index) {
@@ -395,67 +419,212 @@ function removeItem(index) {
     render();
 }
 
-document.addEventListener('DOMContentLoaded', init);
-
 // ==========================================
-// 💳 5. 金流結帳邏輯 (串接 Render 後端)
+// 🚛 4.5 綠界物流輔助邏輯 (新增)
 // ==========================================
 
+// 切換物流顯示 (由 HTML 的 select onchange 觸發)
+function toggleShippingUI() {
+    const method = document.getElementById('shipping-method').value;
+    const cvsBtnGroup = document.getElementById('cvs-btn-group');
+    const addrField = document.getElementById('shipping-address');
+
+    if (method === 'CVS') {
+        if (cvsBtnGroup) cvsBtnGroup.style.display = 'block';
+        if (addrField) {
+            addrField.placeholder = "選取門市後，此處將自動帶入資訊";
+            addrField.readOnly = true;
+        }
+    } else {
+        if (cvsBtnGroup) cvsBtnGroup.style.display = 'none';
+        if (addrField) {
+            addrField.placeholder = "請填寫完整收件地址";
+            addrField.readOnly = false;
+            addrField.value = "";
+        }
+    }
+}
+
+// 呼叫後端開啟綠界地圖
+// 修改後的 openECPayMap：改用傳統表單提交，最穩定
+function openECPayMap() {
+    console.log("嘗試開啟綠界物流地圖...");
+
+    // 1. 建立一個隱藏的表單
+    const form = document.createElement('form');
+    form.method = 'POST';
+    // 這裡直接連向後端的物流路由
+    form.action = 'https://ecpay-payment-demo.onrender.com/create-logistics-map';
+    form.target = '_self'; // 在當前視窗開啟
+
+    // 2. 將表單加入頁面並立刻送出
+    document.body.appendChild(form);
+    form.submit();
+
+    // 3. 送出後移除表單
+    document.body.removeChild(form);
+}
+
+// 檢查網址參數並填入資訊
+function checkLogisticsReturn() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('storeName')) {
+        const name = params.get('storeName');
+        const id = params.get('storeId');
+        const addr = params.get('storeAddr');
+
+        const addrField = document.getElementById('shipping-address');
+        const storeInfo = document.getElementById('selected-store-info');
+        const cvsIdInput = document.getElementById('cvs_store_id');
+
+        if (addrField) addrField.value = `${name} (${id})\n${addr}`;
+        if (cvsIdInput) cvsIdInput.value = id;
+        if (storeInfo) storeInfo.innerText = `📍 已選擇門市：${name}`;
+
+        // 自動切換到 CVS 選項並顯示按鈕
+        const shippingSelect = document.getElementById('shipping-method');
+        if (shippingSelect) {
+            shippingSelect.value = 'CVS';
+            toggleShippingUI();
+        }
+    }
+}
+
 // ==========================================
-// 💳 5. 金流結帳邏輯 (串接 Render 後端)
+// 💳 5. 結帳邏輯：手機驗證 + 金/物流分流
 // ==========================================
 
+// 1. 監聽物流方式，自動切換付款選項
+document.addEventListener('DOMContentLoaded', () => {
+    const shippingSelect = document.getElementById('shipping-method');
+    if (shippingSelect) {
+        shippingSelect.addEventListener('change', function () {
+            const shipping = this.value;
+            const paymentMethodSelect = document.getElementById('payment-method');
+            const codOption = paymentMethodSelect.querySelector('option[value="COD"]');
+
+            if (shipping === 'POST') {
+                paymentMethodSelect.value = 'ECPAY';
+                codOption.disabled = true;
+                codOption.style.display = 'none';
+                alert('提醒您：郵局宅配僅支援線上刷卡/ATM。');
+            } else {
+                codOption.disabled = false;
+                codOption.style.display = 'block';
+            }
+        });
+    }
+});
+
+// 2. 核心結帳函數
 async function checkout(event) {
-    // 1. 檢查購物車
     if (cart.length === 0) {
         alert("購物車是空的，先去逛逛吧！");
         return;
     }
 
-    // 2. 抓取欄位
     const nameInput = document.querySelector('input[name="name"]');
     const phoneInput = document.querySelector('input[name="phone"]');
+    const paymentMethod = document.getElementById('payment-method').value;
+    const shippingMethod = document.getElementById('shipping-method').value;
+    const cvsStoreId = document.getElementById('cvs_store_id').value;
 
-    if (!nameInput.value || !phoneInput.value) {
-        alert("請填寫收件人姓名與電話");
+    // ✨ 新增驗證：如果是超取，必須選門市
+    if (shippingMethod === 'CVS' && !cvsStoreId) {
+        alert("請先點擊按鈕選擇超商取貨門市！");
         return;
     }
 
-    // 3. 準備資料
-    const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
-    const itemName = "MomMomStoreOrder"; // 暫時固定，確保簽章正確
+    if (!nameInput.value || !phoneInput.value || !shippingMethod) {
+        alert("請填寫完整的收件人姓名、電話與取貨方式");
+        return;
+    }
 
-    // 4. UI 回饋
+    const phone = phoneInput.value.trim();
+    if (!/^09\d{8}$/.test(phone)) {
+        alert("請輸入正確的台灣手機號碼 (09xxxxxxxx)");
+        return;
+    }
+
     const btn = event.target;
     const originalText = btn.innerText;
-    btn.innerText = "金流引導中...";
-    btn.disabled = true;
 
-    try {
-        const response = await fetch('https://ecpay-payment-demo.onrender.com/create-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ totalAmount, itemName })
-        });
+    // ✨ 重要修改：計算總金額 (單價 * 數量)
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-        const result = await response.json();
-        if (!result.html) throw new Error("後端回傳格式錯誤");
+    if (paymentMethod === 'ECPAY') {
+        // --- 路徑 1：線上支付 (綠界) ---
+        btn.innerText = "金流引導中...";
+        btn.disabled = true;
 
-        // ✅ 改用 Blob 方式開啟，繞過所有 CSP 限制
-        const blob = new Blob([result.html], { type: 'text/html' });
-        const blobUrl = URL.createObjectURL(blob);
-        const paymentWindow = window.open(blobUrl, '_blank');
+        const itemName = "媽媽十塊質感選物訂單";
 
-        if (!paymentWindow) alert("請允許開啟彈出視窗！");
+        try {
+            const response = await fetch('https://ecpay-payment-demo.onrender.com/create-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ totalAmount, itemName }) // ✨ 傳送正確的總金額
+            });
 
-        // 5秒後釋放記憶體
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+            const result = await response.json();
+            if (!result.html) throw new Error("後端回傳格式錯誤");
 
-    } catch (error) {
-        console.error("錯誤：", error);
-        alert("連線失敗，請稍後再試");
-    } finally {
-        btn.innerText = originalText;
-        btn.disabled = false;
+            const blob = new Blob([result.html], { type: 'text/html' });
+            const blobUrl = URL.createObjectURL(blob);
+            const paymentWindow = window.open(blobUrl, '_blank');
+
+            if (!paymentWindow) alert("請允許開啟彈出視窗以完成付款！");
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+
+        } catch (error) {
+            console.error("錯誤：", error);
+            alert("金流連線失敗，請稍後再試");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+
+    } else {
+        // --- 路徑 2：貨到付款 ---
+        btn.innerText = "訂單傳送中...";
+        btn.disabled = true;
+
+        setTimeout(() => {
+            // ✨ 重要修改：顯示含數量的總金額
+            alert(`訂單已收到！\n收件人：${nameInput.value}\n總金額：NT$ ${totalAmount.toLocaleString()}\n我們將盡快為您寄出。`);
+
+            cart = [];
+            render();
+
+            // 如果有接 Netlify Form，這裡手動送出
+            // document.forms['tenbucks-order'].submit();
+
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }, 1500);
     }
 }
+
+// ==========================================
+// 🚀 執行初始化 (這是最重要的一行！)
+// ==========================================
+
+window.onload = () => {
+    console.log("網頁完全載入，開始渲染商品...");
+    init();
+};
+
+// ==========================================
+// 🚀 6. 介面輔助邏輯 (滾動、回到頂端)
+// ==========================================
+
+window.onscroll = function () {
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (!backToTopBtn) return;
+
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+};

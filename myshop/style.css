@@ -79,87 +79,147 @@ navbar 導覽列
  商品卡片
 **************************************/
 
-/* 商品卡片樣式 */
+/*商品卡片樣式*/
+
 .product-item {
-    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* ✨ 強制所有內容水平置中 */
     text-align: center;
-    cursor: pointer;
-}
-
-.img-wrapper {
-    position: relative;
+    /* ✨ 強制文字置中 */
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     overflow: hidden;
-    background-color: #f5f5f5;
-    aspect-ratio: 1 / 1;
+    padding-bottom: 20px;
+    transition: transform 0.3s;
 }
 
-.img-wrapper img {
+/* 1. 確保圖片容器是唯一的基準點 */
+#product-list .img-wrapper {
+    position: relative !important;
+    /* 強制相對定位 */
     width: 100%;
     aspect-ratio: 1 / 1;
-    /* 強制圖片變成正方形 */
+    overflow: hidden !important;
+    /* 強制隱藏超出範圍的遮罩 */
+    cursor: pointer;
+    background-color: #f8f9fa;
+    /* 墊個底色 */
+    z-index: 1;
+    /* 建立新的堆疊上下文 */
+}
+
+/* 2. 圖片基礎樣式 */
+#product-list .img-wrapper img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    /* 圖片會填滿且不變形，多餘的部分會被裁切 */
+    display: block;
     transition: transform 0.6s ease;
 }
 
-.product-item:hover img {
-    transform: scale(1.05);
-}
-
-/* 1. 增加標題下方的間距，拉開與描述的距離 */
-.product-item h5.p-name {
-    margin-top: 30px;
-    /* 標題與圖片的距離 */
-    margin-bottom: 12px;
-    /* 標題與描述文字的距離 (這就是你要的 padding 效果) */
-    line-height: 1.4;
-}
-
-/* 2. 針對描述文字 (desc) 增加頂部間距與左右內縮 */
-.product-item p.text-muted.small {
-    padding-left: 15px;
-    /* 增加左右內縮，讓文字不要貼到邊框 */
-}
-
-/* 針對商品卡片內的列表排版 */
-.product-item ul {
-    display: inline-block;
-    /* 讓清單容器只佔據文字寬度 */
-    text-align: left;
-    /* 讓裡面的文字靠左對齊 */
-    padding-left: 0;
-    /* 移除預設內縮 */
-    list-style: none;
-    /* 移除預設黑點 (因為已經有 emoji 了) */
-    margin-bottom: 15px;
-}
-
-.product-item li {
-    font-size: 0.85rem;
-    /* 稍微縮小一點點，看起來更精緻 */
-    color: #666;
-    /* 稍微變灰，讓層次感分明 */
-    line-height: 1.6;
-    /* 增加行高，看起來不擁擠 */
-}
-
-/* 修改價格顯示，強迫它換行並置中 */
-.p-price-display {
-    display: block;
-    /* 強制換行 */
+/* 3. 遮罩：絕對定位於 .img-wrapper 內 */
+#product-list .add-to-cart-overlay {
+    position: absolute !important;
+    top: 0;
+    left: 0;
     width: 100%;
-    /* 佔滿寬度 */
-    text-align: center;
-    /* 文字置中 */
-    font-size: 1.25rem;
-    /* 稍微放大價格，讓它更吸睛 */
-    color: #000;
-    /* 價格用深色或品牌色 */
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ✨ 核心設定：使用透明度與縮放來營造浮現感 */
+    opacity: 0;
+    /* 預設完全透明 */
+    transform: scale(1.05);
+    /* 初始稍微放大一點，浮現時縮回原位會更平穩 */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+
+    font-weight: bold;
+    font-size: 1.1rem;
+    z-index: 10;
+    pointer-events: none;
+    backdrop-filter: blur(3px);
+    /* 增加毛玻璃感，讓浮現更有深度 */
 }
 
-/* 確保價格內的小數字也是粗體 */
-.p-price {
-    font-weight: 700;
+/* 4. 滑鼠滑入效果 (Hover) */
+#product-list .img-wrapper:hover .add-to-cart-overlay {
+    opacity: 1;
+    /* 變為不透明 */
+    transform: scale(1);
+    /* 縮回到正常比例，產生一種「套上去」的視覺感 */
+}
+
+#product-list .img-wrapper:hover img {
+    transform: scale(1.1);
+}
+
+/* 商品名稱 */
+.p-name {
+    min-height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0px;
+    padding: 0 15px;
+    width: 100%;
+}
+
+/* 商品描述 */
+.product-item p.text-muted.small {
+    padding: 0 20px;
+    margin-bottom: 0px;
+    min-height: 2.5em;
+}
+
+/* 特點清單區塊 (置中對齊) */
+.product-features {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* ✨ 讓清單在卡片中央 */
+    padding: 0;
+    margin-bottom: 15px;
+    list-style: none;
+    width: 100%;
+}
+
+.product-features li {
+    width: fit-content;
+    /* ✨ 讓文字靠左對齊但整體置中 */
+    text-align: left;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.8;
+}
+
+/* 價格區塊 */
+.p-price-display {
+    margin-top: auto;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+@media (min-width:992px)and (max-width:1200px) {
+
+    .product-item p.text-muted.small {
+        margin-bottom: 10px;
+    }
+
+    .product-features li {
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+    }
 }
 
 /**************************************
@@ -194,12 +254,7 @@ navbar 導覽列
 #productModal .modal-header {
     padding: 0;
     border: none;
-    position: absolute;
-    /* 讓關閉按鈕浮在圖片上方 */
-    right: 15px;
-    top: 15px;
-    z-index: 1051;
-    /* 確保按鈕在最前面 */
+    position: static;
 }
 
 /* 2. 強制移除 modal-body 的內邊距 (如果你 HTML 已經加了 p-0 可省略，但建議加上以防萬一) */
@@ -248,85 +303,140 @@ navbar 導覽列
     /* 確保它是獨立一行 */
 }
 
-/* 1. 鎖定彈窗外殼：寬度與高度固定 */
+/* 鎖定彈窗外殼：寬度與高度固定 */
 @media (min-width: 768px) {
     #productModal .modal-dialog {
+        /* 在這區間內，讓寬度盡量佔滿但不貼邊 */
+        width: 92%;
         max-width: 900px;
-        /* 固定寬度 */
+        margin: 1.75rem auto;
     }
 
     #productModal .modal-content {
-        height: 450px;
-        /* 固定總高度 (這決定了你的卡片大小) */
+        /* 移除 min-height 限制，讓高度由 row 決定 */
+        height: auto;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
+        border: none;
+        border-radius: 15px;
     }
 
-    #productModal .modal-body {
-        height: 100%;
-        padding: 0;
-    }
-
-    /* 讓 row 撐滿高度 */
+    /* 關鍵：使用 flex-nowrap 並讓對齊方式為 stretch */
     #productModal .row.g-0 {
-        height: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        /* 讓左右兩邊高度強行同步 */
     }
 
-    /* 2. 左側圖片：強制正方形 (基於 450px 高度) */
+    /* 左側圖片區：強制 1:1 正方形 */
     #productModal .col-md-6:first-child {
-        height: 450px;
-        width: 450px;
-        /* 寬高一致 = 完美正方形 */
-        flex: 0 0 450px;
+        flex: 0 0 50%;
+        max-width: 50%;
+        aspect-ratio: 1 / 1;
+        /* 鎖定比例 */
+        position: relative;
+        background-color: #f8f9fa;
     }
 
-    /* 3. 右側資訊：鎖定高度並開啟內部捲動 */
+    /* 右側內容區：高度與左側同步，內容過多則捲動 */
     #productModal .col-md-6.p-4 {
-        height: 450px;
-        overflow-y: auto;
-        /* 內容太多會在這裡內部捲動 */
+        flex: 0 0 50%;
+        max-width: 50%;
+
+        /* 核心邏輯：高度設為 0 並靠 flex-grow 撐開，再用 overflow 限制 */
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
+        height: auto;
+
+        /* 確保這裡的 max-height 會跟著左邊的正方形連動 */
+        /* 在 Flex stretch 模式下，內容過長時需要設定一個絕對定位的內部容器或限制 */
+        position: relative;
+    }
+
+    /* 針對右側內部的內容包裝層 (需確保 JS 渲染出的內容都在這裡面) */
+    /* 如果你的 HTML 結構沒變，直接針對 col-md-6.p-4 即可 */
+    #productModal .col-md-6.p-4 {
+        max-height: calc(92vw * 0.5);
+        /* 這是 768-1000 區間的動態正方形高度 */
+        overflow-y: auto;
+    }
+
+    /* 當寬度達到 900px 以上時，高度就固定在 450px */
+    @media (min-width: 900px) {
+        #productModal .col-md-6.p-4 {
+            max-height: 450px;
+        }
     }
 }
 
-/* 4. 圖片填滿設定 */
-#modal-images,
-.carousel-item,
+/* 確保圖片在任何比例下都填滿左側正方形 */
+#productModal .carousel,
+#productModal .carousel-inner,
+#productModal .carousel-item,
 .modal-main-img {
-    height: 100%;
-    width: 100%;
+    height: 100% !important;
+    width: 100% !important;
 }
 
 .modal-main-img {
     object-fit: cover;
-    /* 確保不變形 */
 }
 
-/* 5. 美化內部捲動條 */
+/* 5. 美化內部捲動條 (確保它是深色且易見的) */
 #productModal .col-md-6.p-4::-webkit-scrollbar {
     width: 6px;
 }
 
+#productModal .col-md-6.p-4::-webkit-scrollbar-track {
+    background: transparent;
+}
+
 #productModal .col-md-6.p-4::-webkit-scrollbar-thumb {
-    background-color: #f1f1f1;
+    /* 修正：原本的 #f1f1f1 太淺，建議改深一點 */
+    background-color: #ccc;
     border-radius: 10px;
+}
+
+#productModal .col-md-6.p-4::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+    /* 滑鼠滑過時變深 */
+}
+
+/* 5. 美化內部捲動條 (優化對比度) */
+#productModal .col-md-6.p-4::-webkit-scrollbar {
+    width: 6px;
+}
+
+#productModal .col-md-6.p-4::-webkit-scrollbar-track {
+    background: transparent;
+    /* 讓軌道透明，視覺更簡潔 */
+}
+
+#productModal .col-md-6.p-4::-webkit-scrollbar-thumb {
+    /* 修正：原本的 #f1f1f1 在白色背景下幾乎看不見，建議改深一點 */
+    background-color: #ddd;
+    border-radius: 10px;
+}
+
+#productModal .col-md-6.p-4::-webkit-scrollbar-thumb:hover {
+    background-color: #bbb;
+    /* 滑鼠滑過時變深 */
 }
 
 /* 調整 X 按鈕位置，避免擋到捲軸 */
 #productModal .btn-close {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 2px;
+    right: 2px;
     z-index: 1060;
     /* 確保在最上層 */
     background-color: rgba(255, 255, 255, 0.7);
     /* 給它一個半透明底色，讓它在圖片上也能看見 */
-    padding: 10px;
+    padding: 8px;
     border-radius: 50%;
     transition: all 0.3s;
+    margin: 0;
+    /* 移除 Bootstrap 預設的 margin */
 }
 
 #productModal .btn-close:hover {
@@ -363,6 +473,18 @@ navbar 導覽列
 .carousel-control-next-icon {
     width: 20px;
     height: 20px;
+}
+
+/* 讓數量輸入框的數字置中 */
+#modal-qty {
+    text-align: center !important;
+}
+
+/* 額外優化：隱藏 Chrome/Safari 預設的小箭頭，讓視覺更乾淨 */
+#modal-qty::-webkit-outer-spin-button,
+#modal-qty::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /**************************************
@@ -419,4 +541,65 @@ navbar 導覽列
 
 .btn-remove:hover {
     color: #ff4d4d;
+}
+
+/* 回到頂端 & line 資訊按鈕 */
+
+/* 浮動按鈕容器 */
+.fixed-actions {
+    position: fixed;
+    right: 20px;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+}
+
+/* 通用按鈕樣式 */
+.action-btn-float {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+/* 回到頂端：深色風格 */
+#back-to-top {
+    background-color: #fff;
+    color: #333;
+    opacity: 0;
+    /* 預設隱藏 */
+    visibility: hidden;
+    transform: translateY(20px);
+}
+
+#back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* LINE：經典綠色 */
+.line-btn {
+    background-color: #06C755;
+    color: white;
+}
+
+.line-btn:hover {
+    background-color: #05a547;
+    color: white;
+    transform: scale(1.1);
+}
+
+#back-to-top:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.1);
 }
