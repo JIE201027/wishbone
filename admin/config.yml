@@ -1,9 +1,11 @@
 backend:
-  name: github             # 換掉 git-gateway
-  repo: JIE201027/wishbone  # 填入你的 GitHub 路徑
+  name: github
+  repo: JIE201027/wishbone
   branch: main
   base_url: https://api.github.com
-  auth_endpoint: https://api.netlify.com/auth
+  # 換成這個專門給 Vercel/GitHub 用的認證服務
+  site_id: wishbone-zeta.vercel.app
+  auth_endpoint: https://decap-cms-oauth-gh.vercel.app/api/auth
 
 media_folder: "img"
 public_folder: "/img"
