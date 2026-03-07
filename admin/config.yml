@@ -3,7 +3,7 @@ backend:
   repo: JIE201027/wishbone
   branch: main
   base_url: https://api.github.com
-  # 換成這個專門給 Vercel/GitHub 用的認證服務
+  # 專門給 Vercel 使用的 GitHub 認證服務端點
   site_id: wishbone-zeta.vercel.app
   auth_endpoint: https://decap-cms-oauth-gh.vercel.app/api/auth
 
@@ -17,7 +17,7 @@ collections:
     files:
       - name: "red_config"
         label: "紅紅首頁與醫療紀錄"
-        file: "red/data.json" # <--- 加上 red/ 前綴
+        file: "red/data.json" 
         fields:
           - { label: "主標題", name: "mainTitle", widget: "string" }
           - { label: "副標題", name: "subTitle", widget: "string" }
@@ -35,7 +35,7 @@ collections:
     files:
       - name: "home_config"
         label: "許願骨首頁與價格"
-        file: "single-page-website/single-data.json" # <--- 加上資料夾前綴
+        file: "wish/single-data.json" # <--- 已從 single-page-website 改為 wish
         fields:
           - { label: "Banner 大標題", name: "heroTitle", widget: "string" }
           - { label: "Banner 副標題", name: "heroDesc", widget: "string" }
@@ -52,13 +52,13 @@ collections:
               - { label: "功能勾選清單", name: "features", widget: "list" }
 
   # --- 3. 媽媽十塊的資料連動 ---
-  - name: "myshop"              # 這是集合的唯一名稱
+  - name: "myshop"
     label: "🛒 媽媽十塊 - 商品管理"
-    folder: "myshop/content"     # 資料存放資料夾
-    create: true                # 允許在後台新增商品
+    folder: "myshop/content"
+    create: true
     extension: "json"
     format: "json"
-    slug: "{{id}}"              # 檔名會根據你輸入的 ID 生成，例如 m01.json
+    slug: "{{id}}"
     fields:
       - { label: "商品 ID (例如 m01)", name: "id", widget: "string" }
       - { label: "商品名稱", name: "name", widget: "string" }
@@ -78,8 +78,6 @@ collections:
       - { label: "商品特點 (一行一個)", name: "features", widget: "list" }
       - { label: "顏色選項", name: "colorOptions", widget: "list", required: false }
       - { label: "尺寸選項", name: "sizeOptions", widget: "list", required: false }
-      
-      # 修正後的圖片欄位：加上 name: "img"
       - label: "商品圖片輪播"
         name: "images"
         widget: "list"
