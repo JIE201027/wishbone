@@ -1,6 +1,6 @@
 backend:
   name: github             # 換掉 git-gateway
-  repo: JIE201027/meetreptile  # 填入你的 GitHub 路徑
+  repo: JIE201027/wishbone  # 填入你的 GitHub 路徑
   branch: main
   base_url: https://api.github.com
 
