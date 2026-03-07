@@ -45,3 +45,37 @@ collections:
               - { label: "適合對象描述", name: "target", widget: "string" }
               - { label: "方案詳細介紹", name: "desc", widget: "text" }
               - { label: "功能勾選清單", name: "features", widget: "list" }
+
+  # --- 3. 媽媽十塊的資料連動 ---
+  - name: "myshop"              # 這是集合的唯一名稱
+    label: "🛒 媽媽十塊 - 商品管理"
+    folder: "myshop/content"     # 資料存放資料夾
+    create: true                # 允許在後台新增商品
+    extension: "json"
+    format: "json"
+    slug: "{{id}}"              # 檔名會根據你輸入的 ID 生成，例如 m01.json
+    fields:
+      - { label: "商品 ID (例如 m01)", name: "id", widget: "string" }
+      - { label: "商品名稱", name: "name", widget: "string" }
+      - { 
+          label: "分類", 
+          name: "category", 
+          widget: "select", 
+          options: [
+            { label: "熱賣商品", value: "bestseller" },
+            { label: "居家選物", value: "living" },
+            { label: "療癒小物", value: "accessory" }
+          ] 
+        }
+      - { label: "價格", name: "price", widget: "number" }
+      - { label: "短描述 (列表顯示)", name: "desc", widget: "string" }
+      - { label: "詳細規格 (彈窗顯示)", name: "modalDesc", widget: "text" }
+      - { label: "商品特點 (一行一個)", name: "features", widget: "list" }
+      - { label: "顏色選項", name: "colorOptions", widget: "list", required: false }
+      - { label: "尺寸選項", name: "sizeOptions", widget: "list", required: false }
+      
+      # 這裡修正了：讓 images 變成單純的路徑清單，對接 main.js 最輕鬆
+      - label: "商品圖片輪播"
+        name: "images"
+        widget: "list"
+        field: { label: "圖片路徑", widget: "image" }
