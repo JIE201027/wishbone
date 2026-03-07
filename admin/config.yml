@@ -7,8 +7,8 @@ backend:
   site_id: wishbone-zeta.vercel.app
   auth_endpoint: https://decap-cms-oauth-gh.vercel.app/api/auth
 
-media_folder: "img"
-public_folder: "/img"
+media_folder: "img"          # 圖片會存到 GitHub 根目錄的 /img/
+public_folder: "/img"       # 網頁 HTML 會去 /img/ 找圖片
 
 collections:
   # --- 1. 紅紅的資料連動 ---
