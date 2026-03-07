@@ -1,6 +1,8 @@
 backend:
-  name: git-gateway
+  name: github             # 換掉 git-gateway
+  repo: JIE201027/meetreptile  # 填入你的 GitHub 路徑
   branch: main
+  base_url: https://api.github.com
 
 media_folder: "img"
 public_folder: "/img"
@@ -74,8 +76,8 @@ collections:
       - { label: "顏色選項", name: "colorOptions", widget: "list", required: false }
       - { label: "尺寸選項", name: "sizeOptions", widget: "list", required: false }
       
-      # 這裡修正了：讓 images 變成單純的路徑清單，對接 main.js 最輕鬆
+      # 修正後的圖片欄位：加上 name: "img"
       - label: "商品圖片輪播"
         name: "images"
         widget: "list"
-        field: { label: "圖片路徑", widget: "image" }
+        field: { label: "圖片路徑", name: "img", widget: "image" }
