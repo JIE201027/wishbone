@@ -43,6 +43,191 @@ navbar 導覽列
 }
 
 /**************************************
+高級感 Banner 樣式
+**************************************/
+#hero-banner {
+    position: relative;
+    height: 70vh;
+    /* 佔據螢幕高度的 70%，非常有視覺張力 */
+    overflow: hidden;
+    margin-bottom: 10px !important;
+    /* 強制縮小間距 */
+}
+
+.banner-img {
+    height: 70vh;
+    object-fit: cover;
+    /* 確保圖片不變形地填滿區域 */
+    transition: transform 10s ease;
+    /* 緩慢放大效果 */
+}
+
+/* 讓當前圖片有慢慢放大的動態感 (Ken Burns effect) */
+.carousel-item.active .banner-img {
+    transform: scale(1.1);
+}
+
+/* 黑色半透明遮罩層：這能讓白字更明顯 */
+.banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.5) 100%);
+    z-index: 1;
+}
+
+.carousel-caption {
+    z-index: 2;
+    bottom: 25%;
+    /* 讓文字靠中一點，不要太貼底 */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    /* 文字陰影增加質感 */
+}
+
+/* 手機版微調 */
+@media (max-width: 768px) {
+
+    #hero-banner,
+    .banner-img {
+        height: 60vh;
+        /* 稍微提高一點，讓文字空間更充裕 */
+    }
+
+    .carousel-caption {
+        bottom: 15%;
+        /* 手機版文字往下一點點，避免擋住圖片視覺焦點 */
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* 調整手機版標題大小，避免太擠 */
+    .carousel-caption h2 {
+        font-size: 1.8rem !important;
+        letter-spacing: 2px !important;
+        margin-bottom: 10px;
+    }
+
+    /* 調整手機版內文大小 */
+    .carousel-caption p {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    /* 讓按鈕在手機上不要太大 */
+    .carousel-caption .btn {
+        padding: 8px 30px !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/**************************************
+  🛒 商品分類：橫向不換行 + 絲滑滑動版
+**************************************/
+
+/* 分類容器 - 強制單排與手機版滑動優化 */
+#category-filter {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    /* 💡 絕對禁止換行，確保按鈕排成一列 */
+    gap: 10px;
+    padding: 10px 0;
+
+    /* 桌機預設置中 */
+    justify-content: center;
+
+    /* 橫向捲動設定 */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* iOS 絲滑捲動 */
+
+    /* 💡 增加吸附感，滑動停止時會自動對齊按鈕 */
+    scroll-snap-type: x mandatory;
+
+    /* 隱藏捲動條 (Firefox, IE) */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* 隱藏捲動條 (Chrome, Safari, Edge) */
+#category-filter::-webkit-scrollbar {
+    display: none;
+}
+
+/* 分類按鈕基礎樣式 */
+#category-filter .btn {
+    flex: 0 0 auto;
+    /* 💡 防止按鈕被壓縮變形 */
+    white-space: nowrap;
+    /* 💡 防止按鈕內的文字換行 */
+    scroll-snap-align: center;
+    /* 滑動停止時按鈕自動靠中對齊 */
+
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
+    border-width: 1.5px;
+    border-radius: 50px;
+    /* 膠囊造型 */
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+/* 點擊時的下壓反饋 (物理感) */
+#category-filter .btn:active {
+    transform: scale(0.92);
+}
+
+/* 當按鈕被選中時的樣式 (如果你 JS 有加 active class) */
+#category-filter .btn.active {
+    background-color: #333;
+    color: #fff;
+    border-color: #333;
+}
+
+/* 商品卡片淡入動畫 - 讓分類切換更生動 */
+.product-item {
+    animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes slideUpFade {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/**************************************
+  📱 手機版微調
+**************************************/
+@media (max-width: 768px) {
+    #category-filter {
+        /* 💡 關鍵：手機版改為左對齊，客人才滑得動 */
+        justify-content: flex-start !important;
+        padding-left: 20px;
+        /* 左右留白，避免按鈕貼死螢幕邊緣 */
+        padding-right: 20px;
+    }
+
+    #category-filter .btn {
+        font-size: 0.8rem;
+        /* 手機版字體稍微縮小 */
+        padding: 6px 16px;
+        /* 💡 稍微增加按鈕間距，確保視覺上有足夠的「滑動暗示」 */
+        margin-right: 8px;
+    }
+}
+
+/**************************************
  右上購物車按鈕
 **************************************/
 
@@ -96,6 +281,7 @@ navbar 導覽列
     overflow: hidden;
     padding-bottom: 20px;
     transition: transform 0.3s;
+    gap: 20px;
 }
 
 /* 1. 確保圖片容器是唯一的基準點 */
@@ -163,14 +349,25 @@ navbar 導覽列
 }
 
 /* 商品名稱 */
+/* 首頁卡片標題樣式 */
 .p-name {
-    min-height: 3em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 0px;
-    padding: 0 15px;
-    width: 100%;
+    /* ✨ 使用 clamp 讓字體自動縮放 */
+    /* 最小值 1rem (手機), 中間值 2.5vw (隨螢幕變動), 最大值 1.3rem (電腦) */
+    font-size: clamp(1rem, 2.5vw, 1.3rem) !important;
+    font-weight: 700;
+    /* 保持粗體 */
+    line-height: 1.4;
+    /* 增加行高，避免兩行字擠在一起 */
+    margin-bottom: 8px !important;
+    /* 標題與價格之間的距離 */
+    color: #333;
+    /* 深灰色看起來比較高級 */
+
+    /* 確保標題長度一致，超過兩行顯示省略號 (選用) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* 商品描述 */
@@ -204,21 +401,64 @@ navbar 導覽列
 
 /* 價格區塊 */
 .p-price-display {
-    margin-top: auto;
+    color: #e74c3c !important;
+    /* 換成跟彈窗一樣的紅色 */
     font-size: 1.25rem;
-    color: #333;
+    /* 稍微加大字級 */
+    font-weight: 800;
+    /* 加粗，提升吸引力 */
+    margin: 0 auto !important;
 }
 
-@media (min-width:992px)and (max-width:1200px) {
+/* 卡片按鈕：加大並提升質感 */
+.action-btn {
+    padding: 8px 30px !important;
+    /* 增加上下高度，讓按鈕變大 */
+    font-size: 1.2rem !important;
+    /* 字體放大 */
+    letter-spacing: 1px;
+    /* 字間距微調，看起來更專業 */
+    border-radius: 8px;
+    /* 稍微圓角一點，跟整體風格呼應 */
+    transition: all 0.3s ease;
+    /* 滑鼠滑過時的平滑效果 */
+}
 
-    .product-item p.text-muted.small {
-        margin-bottom: 10px;
+/* 按鈕滑過效果（可選，讓使用者知道可以點） */
+.action-btn:hover {
+    background-color: #333 !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    /* 輕微往上浮起感 */
+}
+
+/* 針對手機版 (螢幕寬度小於 768px) 的微調 */
+@media (max-width: 768px) {
+    .p-name {
+        font-size: 1rem !important;
+        /* 手機版固定在稍微小一點的尺寸 */
+        margin-bottom: 15px !important;
     }
 
-    .product-features li {
-        padding: 0;
-        margin: 0;
-        font-size: 12px;
+    /* 剛才說的按鈕，手機版可以稍微扁一點點才不會佔空間 */
+    .action-btn {
+        padding: 8px 20px !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+/* 針對平板版的微調 */
+
+@media (min-width:769px)and (max-width:1200px) {
+
+    .p-name {
+        font-size: 1rem !important;
+        margin-bottom: 15px !important;
+    }
+
+    .action-btn {
+        padding: 8px 20px !important;
+        font-size: 0.9rem !important;
     }
 }
 
@@ -487,6 +727,73 @@ navbar 導覽列
     margin: 0;
 }
 
+/* 讓特點清單上方的線離遠一點 */
+#modal-features {
+    list-style: none;
+    padding: 0;
+    margin-top: 18px !important;
+    /* 增加上方間距 */
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    /* 上方線條 */
+}
+
+/* 自定義勾勾樣式：黑色圓底 + 白色勾勾 */
+#modal-features li {
+    position: relative;
+    padding-left: 25px;
+    /* 給勾勾留位子 */
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+}
+
+#modal-features li::before {
+    content: '✔';
+    /* 勾勾符號 */
+    position: absolute;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    background-color: #333;
+    color: white;
+    /* 白色勾勾 */
+    border-radius: 50%;
+    /* 圓形 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* 詳細規格 (modalDesc) 的樣式優化 */
+#modal-detail-spec {
+    white-space: pre-wrap;
+    /* 讓反引號內的換行生效 */
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* 讓彈窗的圓角跟你的商品卡片一致 */
+.swal2-popup {
+    border-radius: 20px !important;
+    font-family: 'Noto Sans TC', sans-serif !important;
+}
+
+/* 調整確認按鈕的樣式 */
+.swal2-confirm {
+    padding: 10px 30px !important;
+    font-weight: bold !important;
+}
+
 /**************************************
 購物車樣式
 **************************************/
@@ -512,15 +819,25 @@ navbar 導覽列
 /* 簡約輸入框 */
 .form-control-custom {
     width: 100%;
-    border: none;
     border-bottom: 1px solid #ddd;
     padding: 12px 5px;
     outline: none;
-    transition: border-color 0.3s;
+    background-color: #fdfdfd;
+    /* 極淺灰底色 */
+    border-radius: 4px;
+    /* 微圓角 */
+    padding: 12px 15px;
+    /* 增加內距 */
+    border: 1px solid #eee;
+    /* 全邊框改為淡色 */
+    transition: all 0.3s ease;
 }
 
 .form-control-custom:focus {
-    border-bottom: 1px solid #000;
+    background-color: #fff;
+    border-color: #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    /* 聚焦時輕微發光 */
 }
 
 /* 購物車列表樣式 */
@@ -543,7 +860,31 @@ navbar 導覽列
     color: #ff4d4d;
 }
 
-/* 回到頂端 & line 資訊按鈕 */
+/**************************************
+footer
+**************************************/
+
+.footer-p {
+    font-size: 16px;
+    margin: 8px 0px;
+}
+
+/* 只有在電腦版 (寬度 768px 以上) 才顯示垂直分隔線 */
+@media (min-width: 768px) {
+    .border-end-md {
+        border-right: 1px solid #dee2e6 !important;
+        /* 細細的淺灰色 */
+    }
+}
+
+/* 讓 Footer 的連結滑過時有點動態效果 (加分用) */
+.footer-links a:hover {
+    color: #000 !important;
+}
+
+/**************************************
+回到頂端 & line 資訊按鈕
+**************************************/
 
 /* 浮動按鈕容器 */
 .fixed-actions {
@@ -558,6 +899,10 @@ navbar 導覽列
 
 /* 通用按鈕樣式 */
 .action-btn-float {
+    padding: 10px 0 !important;
+    /* 增加上下高度，讓按鈕變大 */
+    letter-spacing: 1px;
+    /* 字間距微調，看起來更專業 */
     width: 50px;
     height: 50px;
     border-radius: 50%;

@@ -8,6 +8,9 @@
     <link href="https://unpkg.com/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -33,14 +36,56 @@
     </nav>
 
     <!-- header banner -->
-    <header class="text-center py-5 bg-light mb-5">
-        <h1 class="display-6 fw-bold">Mom Mom Select</h1>
-        <p class="text-muted">「 全館 NT$ 399 超商免運 • NT$ 999 宅配免運 」</p>
+    <header id="hero-banner" class="carousel slide carousel-fade mb-5" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#hero-banner" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#hero-banner" data-bs-slide-to="1"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="banner-overlay"></div>
+                <img src="https://images.unsplash.com/photo-1691302174719-d896b5270ed8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    class="d-block w-100 banner-img" alt="挖媽媽的小豬撲滿">
+                <div class="carousel-caption">
+                    <h2 class="display-4 fw-bold tracking-widest">挖媽媽的小豬撲滿</h2>
+                    <p>全館滿 NT$ 399 超商免運、NT$ 999 宅配免運</p>
+                    <a href="#product-list" class="btn btn-outline-light btn-lg px-5 mt-3">立即選購</a>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <div class="banner-overlay"></div>
+                <img src="https://images.unsplash.com/photo-1669951584605-4deba095a87f?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    class="d-block w-100 banner-img" alt="找出媽媽的私房錢">
+                <div class="carousel-caption">
+                    <h2 class="display-4 fw-bold tracking-widest">找出媽媽的私房錢</h2>
+                    <p>全館滿 NT$ 399 超商免運、NT$ 999 宅配免運</p>
+                    <a href="#product-list" class="btn btn-outline-light btn-lg px-5 mt-3">立即選購</a>
+                </div>
+            </div>
+
+        </div> <button class="carousel-control-prev" type="button" data-bs-target="#hero-banner" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#hero-banner" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
     </header>
+
+    <!-- 商品分類 -->
+    <section class="container mb-4">
+        <div class="d-flex justify-content-center gap-2 py-3" id="category-filter">
+            <button class="btn btn-dark rounded-pill px-4 active" data-filter="all">全部商品</button>
+            <button class="btn btn-outline-dark rounded-pill px-4" data-filter="bestseller">熱賣商品</button>
+            <button class="btn btn-outline-dark rounded-pill px-4" data-filter="living">居家選物</button>
+            <button class="btn btn-outline-dark rounded-pill px-4" data-filter="accessory">療癒小物</button>
+        </div>
+    </section>
 
     <!-- 商品卡片 -->
     <main class="container mb-5">
-        <div id="product-list" class="row g-5">
+        <div id="product-list" class="row g-2 g-md-4">
         </div>
     </main>
 
@@ -50,24 +95,41 @@
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
                     <h4 class="text-center fw-bold mb-4">你的選物清單</h4>
+
                     <div id="cart-items" class="mb-4">
                         <p class="text-center text-muted">清單目前是空的</p>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center border-top pt-3">
-                        <span class="h5">小計</span>
-                        <span class="h5 fw-bold">NT$ <span id="cart-total">0</span></span>
+
+                    <div id="shipping-tip" class="text-center mb-3 p-2 rounded"
+                        style="display: none; background-color: #fff0f5; color: #d63384; font-size: 0.9rem;">
+                    </div>
+
+                    <div class="border-top pt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>商品小計</span>
+                            <span>NT$ <span id="cart-subtotal">0</span></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>運費 <small id="shipping-note" class="text-muted">(尚未選擇方式)</small></span>
+                            <span>NT$ <span id="shipping-fee">0</span></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="h5 fw-bold">總計</span>
+                            <span class="h5 fw-bold text-danger">NT$ <span id="cart-total">0</span></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="bg-light py-5">
+    <section id="checkout-section" class="bg-light py-5">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
-                    <form name="tenbucks-order" method="POST" data-netlify="true"
-                        class="bg-white p-4 shadow-sm rounded">
+                    <form id="order-form" name="tenbucks-order" class="bg-white p-4 shadow-sm rounded">
                         <input type="hidden" name="cart_items" id="cart_summary">
 
                         <input type="hidden" name="cvs_store_id" id="cvs_store_id">
@@ -86,7 +148,7 @@
                                 onchange="toggleShippingUI()" required>
                                 <option value="" disabled selected>選擇取貨方式</option>
                                 <option value="CVS">7-11 / 全家 (超商取貨)</option>
-                                <option value="POST">郵局宅配</option>
+                                <option value="POST">宅配</option>
                             </select>
                         </div>
 
@@ -100,6 +162,8 @@
 
                         <div class="mb-3">
                             <select id="payment-method" class="form-control-custom" required>
+                                <option value="" disabled selected>選擇付款方式</option>
+
                                 <option value="ECPAY">線上刷卡 / ATM</option>
                                 <option value="COD">貨到付款 (CVS)</option>
                             </select>
@@ -108,6 +172,11 @@
                         <div class="mb-4">
                             <textarea name="address" id="shipping-address" class="form-control-custom" rows="3"
                                 placeholder="請填寫收件地址 (若選超商請點上方按鈕選擇)" required></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3 mb-3 px-1">
+                            <span class="fw-bold">總金額</span>
+                            <span class="text-danger fw-bold fs-4">NT$ <span id="final-total">0</span></span>
                         </div>
 
                         <button type="button" onclick="checkout(event)"
@@ -176,6 +245,14 @@
                                 </div>
 
                                 <p id="modal-desc" class="text-muted small"></p>
+                                <ul id="modal-features" class="list-unstyled small mt-3 pt-3"
+                                    style="border-top: 1px dashed #ddd;">
+                                </ul>
+                                <div class="mt-3 pt-3" style="border-top: 1px solid #eee;">
+                                    <p class="fw-bold small mb-2"><i class="fa-solid fa-list-ul me-1"></i> 商品規格</p>
+                                    <div id="modal-detail-spec" class="text-muted small lh-base">
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="pt-3 mt-auto">
@@ -193,37 +270,41 @@
     <footer class="main-footer py-5 mt-5">
         <div class="container">
             <div class="row g-4 text-center text-md-start">
-                <div class="col-md-4">
-                    <h5 class="fw-bold mb-3">媽媽十塊雜貨店</h5>
-                    <p class="text-muted small">
-                        致力於發掘生活中療癒、實用且具設計感的選物。<br>
-                        讓每一件物品都能為你的日常增添一份溫度。
-                    </p>
-                    <div class="social-links mt-3">
-                        <a href="#" class="me-3 text-dark"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="me-3 text-dark"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="text-dark"><i class="bi bi-line"></i></a>
+                <div class="col-md-5 border-end-md">
+                    <div class="pe-md-4">
+                        <h5 class="fw-bold mb-3">媽媽十塊雜貨店</h5>
+                        <p class="footer-p">致力於發掘生活中療癒、實用且具設計感的選物。</p>
+                        <p class="footer-p">讓每一件物品都能為你的日常增添一份溫度。</p>
+                        <div class="social-links mt-3">
+                            <a href="#" class="me-3 text-dark"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="me-3 text-dark"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="text-dark"><i class="bi bi-line"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 border-end-md">
+                    <div class="px-md-4">
+                        <h5 class="fw-bold mb-3">幫助與服務</h5>
+                        <ul class="list-unstyled footer-links">
+                            <li><a href="#" class="text-decoration-none text-muted">退換貨政策</a></li>
+                            <li><a href="#" class="text-decoration-none text-muted">常見問題 FAQ</a></li>
+                            <li><a href="#" class="text-decoration-none text-muted">隱私權條款</a></li>
+                        </ul>
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <h5 class="fw-bold mb-3">幫助與服務</h5>
-                    <ul class="list-unstyled footer-links">
-                        <li><a href="#" class="text-decoration-none text-muted">退換貨政策</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted">常見問題 FAQ</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted">隱私權條款</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-md-4">
-                    <h5 class="fw-bold mb-3">聯絡我們</h5>
-                    <p class="text-muted small mb-1">客服時間：週一至週五 10:00 - 18:00</p>
-                    <p class="text-muted small mb-1">電子信箱：service@mommom.com</p>
-                    <p class="text-muted small">官方 LINE：@mom_select</p>
+                    <div class="ps-md-4">
+                        <h5 class="fw-bold mb-3">聯絡我們</h5>
+                        <p class="text-muted small mb-1">客服時間：週一至週五 10:00 - 18:00</p>
+                        <p class="text-muted small mb-1">電子信箱：service@mommom.com</p>
+                        <p class="text-muted small">官方 LINE：@mom_select</p>
+                    </div>
                 </div>
             </div>
 
-            <hr class="my-4 text-muted">
+            <hr class="my-4 text-muted" style="margin-top: 40px!important;margin-bottom: 50px !important;">
 
             <div class="text-center text-muted small">
                 &copy; 2026 媽媽十塊雜貨店 Good Things Select. All rights reserved.
