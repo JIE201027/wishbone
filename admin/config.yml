@@ -1,10 +1,6 @@
 backend:
-  name: github
-  repo: JIE201027/wishbone
+  name: git-gateway # 這是 Netlify 專用，它會幫你處理所有認證
   branch: main
-  auth_type: pkce # 確保這行前方只有兩個空格
-  client_id: Ov23liM0kZxs0KsF2a5C
-# 移除 base_url 試試看
 
 display_url: https://wishbone-zeta.vercel.app
 media_folder: "img"

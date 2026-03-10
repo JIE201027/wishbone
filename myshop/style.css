@@ -759,7 +759,7 @@ navbar 導覽列
     width: 18px;
     height: 18px;
     background-color: #333;
-    color: white;
+    color: white !important;
     /* 白色勾勾 */
     border-radius: 50%;
     /* 圓形 */

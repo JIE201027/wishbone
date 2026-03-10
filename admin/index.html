@@ -3,50 +3,13 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Wishbone Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>許願骨｜一站式管理後台</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.1.2/dist/decap-cms.js"></script>
-    <script>
-        CMS.init({
-            config: {
-                backend: {
-                    name: 'github',
-                    repo: 'JIE201027/wishbone',
-                    branch: 'main',
-                    auth_type: 'pkce',
-                    client_id: 'Ov23liM0kZxs0KsF2a5C',
-                    base_url: 'https://api.github.com'
-                },
-                load_config_file: false, // 關鍵：告訴它不要去讀 config.yml，完全聽我的
-                display_url: 'https://wishbone-zeta.vercel.app',
-                media_folder: 'img',
-                public_folder: '/img',
-                collections: [
-                    {
-                        name: "myshop",
-                        label: "🛒 媽媽十塊商品",
-                        files: [
-                            {
-                                name: "products",
-                                label: "商品列表",
-                                file: "myshop/products.json",
-                                fields: [
-                                    {
-                                        label: "商品清單", name: "all_products", widget: "list", fields: [
-                                            { label: "名稱", name: "name", widget: "string" },
-                                            { label: "價格", name: "price", widget: "number" }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        });
-    </script>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </body>
 
 </html>
