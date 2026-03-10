@@ -1,3 +1,16 @@
+// 強力防止網址出現純井字號
+window.addEventListener('hashchange', function (e) {
+    if (window.location.hash === '#/' || window.location.hash === '#') {
+        history.replaceState(null, document.title, window.location.pathname + window.location.search);
+    }
+});
+
+// 初始化時如果已經有 #，立刻清除
+if (window.location.hash === '#/' || window.location.hash === '#') {
+    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+}
+
+
 // ==========================================
 // 🛒 1. 商品資料庫 (以後改內容、加商品，只改這裡！)
 // ==========================================
@@ -914,17 +927,29 @@ async function sendToGoogleSheet(orderData) {
 }
 
 // ==========================================
-// 8. 避免錨點跳轉導致連結出現 # 號
+// 8. 導覽優化：平滑捲動 & 網址清潔工具
 // ==========================================
 
-// 自動處理全站所有 # 連結，防止網址變動並實現平滑捲動
+// 1. 攔截點擊事件：防止點擊錨點（如 #product-list）產生網址變化
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
         const targetId = this.getAttribute('href').slice(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
+
+        // 只有當 href 不是單純的 "#" 時才執行捲動
+        if (targetId) {
+            e.preventDefault();
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        } else {
+            // 如果只是 href="#"，純粹阻止預設行為
+            e.preventDefault();
         }
     });
 });
+
+// 2. 強力清除：如果網頁一載入就帶有 #/ 或 #，立刻把它移除（修正 CMS 殘留問題）
+if (window.location.hash) {
+    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+}
