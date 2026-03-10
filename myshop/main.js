@@ -912,3 +912,19 @@ async function sendToGoogleSheet(orderData) {
         console.error("Google Sheet 同步失敗", e);
     }
 }
+
+// ==========================================
+// 8. 避免錨點跳轉導致連結出現 # 號
+// ==========================================
+
+// 自動處理全站所有 # 連結，防止網址變動並實現平滑捲動
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').slice(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+});
