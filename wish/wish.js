@@ -31,8 +31,11 @@ window.addEventListener('scroll', function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     // 加上最前面的斜槓 /，這是最穩定的寫法
-    fetch('/wish/single-data.json?t=' + new Date().getTime())
-        .then(res => res.json())
+    fetch('single-data.json?t=' + new Date().getTime())
+        .then(res => {
+            if (!res.ok) throw new Error('找不到 JSON 檔案');
+            return res.json();
+        })
         .then(data => {
             // 1. 更新 Banner
             document.getElementById('hero-title').innerText = data.heroTitle;
