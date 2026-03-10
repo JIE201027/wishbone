@@ -751,23 +751,32 @@ navbar 導覽列
     align-items: center;
 }
 
+/* 自定義勾勾樣式：修正手機版變灰色的問題 */
 #modal-features li::before {
-    content: '✔';
-    /* 勾勾符號 */
+    /* 1. 核心修正：加上 \FE0E 強制使用文字模式渲染，避免變成系統 Emoji */
+    content: '\2714\FE0E';
+
     position: absolute;
     left: 0;
     width: 18px;
     height: 18px;
     background-color: #333;
+    /* 黑底 */
     color: white !important;
-    /* 白色勾勾 */
+    /* 白勾 */
     border-radius: 50%;
-    /* 圓形 */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+
+    /* 2. 針對手機瀏覽器的優化設定 */
+    font-size: 10px;
+    /* 勾勾稍微縮小一點才不會超出圓圈 */
     font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+    /* 讓線條更銳利 */
+    text-shadow: none;
+    /* 移除可能的陰影 */
 }
 
 /* 詳細規格 (modalDesc) 的樣式優化 */
