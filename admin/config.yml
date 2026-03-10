@@ -7,8 +7,11 @@ backend:
   site_id: wishbone-zeta.vercel.app
   auth_endpoint: https://decap-cms-oauth-gh.vercel.app/api/auth
 
-media_folder: "img"          # 圖片會存到 GitHub 根目錄的 /img/
-public_folder: "/img"       # 網頁 HTML 會去 /img/ 找圖片
+# 移除井字號路由，讓網址更漂亮 (雖然對 Decap 來說有些限制，但建議加上)
+show_preview_links: false
+
+media_folder: "img"
+public_folder: "/img"
 
 collections:
   # --- 1. 紅紅的資料連動 ---
@@ -35,7 +38,7 @@ collections:
     files:
       - name: "home_config"
         label: "許願骨首頁與價格"
-        file: "wish/single-data.json" # <--- 已從 single-page-website 改為 wish
+        file: "wish/single-data.json"
         fields:
           - { label: "Banner 大標題", name: "heroTitle", widget: "string" }
           - { label: "Banner 副標題", name: "heroDesc", widget: "string" }
@@ -51,34 +54,34 @@ collections:
               - { label: "方案詳細介紹", name: "desc", widget: "text" }
               - { label: "功能勾選清單", name: "features", widget: "list" }
 
-  # --- 3. 媽媽十塊的資料連動 ---
-  - name: "myshop"
-    label: "🛒 媽媽十塊 - 商品管理"
-    folder: "myshop/content"
-    create: true
-    extension: "json"
-    format: "json"
-    slug: "{{id}}"
-    fields:
-      - { label: "商品 ID (例如 m01)", name: "id", widget: "string" }
-      - { label: "商品名稱", name: "name", widget: "string" }
-      - { 
-          label: "分類", 
-          name: "category", 
-          widget: "select", 
-          options: [
-            { label: "熱賣商品", value: "bestseller" },
-            { label: "居家選物", value: "living" },
-            { label: "療癒小物", value: "accessory" }
-          ] 
-        }
-      - { label: "價格", name: "price", widget: "number" }
-      - { label: "短描述 (列表顯示)", name: "desc", widget: "string" }
-      - { label: "詳細規格 (彈窗顯示)", name: "modalDesc", widget: "text" }
-      - { label: "商品特點 (一行一個)", name: "features", widget: "list" }
-      - { label: "顏色選項", name: "colorOptions", widget: "list", required: false }
-      - { label: "尺寸選項", name: "sizeOptions", widget: "list", required: false }
-      - label: "商品圖片輪播"
-        name: "images"
-        widget: "list"
-        field: { label: "圖片路徑", name: "img", widget: "image" }
+ # --- 3. 媽媽十塊的資料連動 (修正為單一檔案模式) ---
+  - name: "myshop_page"
+    label: "🛒 媽媽十塊 - 全商品管理"
+    files:
+      - name: "products_config"
+        label: "商品列表總管"
+        file: "myshop/products.json" # 所有商品存在這一個檔案
+        allow_add: true # 允許在 list 中新增項目
+        fields:
+          - label: "所有商品清單"
+            name: "all_products"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - { label: "商品 ID (例如 m01)", name: "id", widget: "string" }
+              - { label: "商品名稱", name: "name", widget: "string" }
+              - { 
+                  label: "分類", 
+                  name: "category", 
+                  widget: "select", 
+                  options: [
+                    { label: "熱賣商品", value: "bestseller" },
+                    { label: "居家選物", value: "living" },
+                    { label: "療癒小物", value: "accessory" }
+                  ] 
+                }
+              - { label: "價格", name: "price", widget: "number" }
+              - { label: "短描述 (列表顯示)", name: "desc", widget: "string" }
+              - { label: "詳細規格 (彈窗顯示)", name: "modalDesc", widget: "text" }
+              - { label: "商品特點", name: "features", widget: "list", field: {label: "特點", name: "item", widget: "string"} }
+              - { label: "商品圖片輪播", name: "images", widget: "list", field: {label: "圖片", name: "img", widget: "image"} }

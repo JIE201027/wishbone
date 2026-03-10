@@ -200,14 +200,47 @@ let cart = [];
 // 🏗️ 2. 初始化與自動渲染
 // ==========================================
 async function init() {
-    // 1. 嘗試載入 CMS 資料 (目前先寫成 fallback 邏輯)
+    console.log("正在從 CMS 載入商品資料...");
+
     try {
-        // 未來這裡會放 fetch 程式碼
-        // 目前我們先手動把備用資料倒進去，確保網頁不會空白
-        productData = { ...defaultProductData };
-        console.log("資料庫已就緒");
+        // 1. 讀取 CMS 產出的 json (注意這裡的路徑是相對於 myshop/index.html)
+        const response = await fetch('products.json');
+        if (!response.ok) throw new Error("尚未建立 products.json 或檔案路徑錯誤");
+
+        const cmsData = await response.json();
+
+        // 2. 轉換格式 (從 CMS 的 Array 轉回你程式碼用的 Object)
+        if (cmsData && cmsData.all_products && cmsData.all_products.length > 0) {
+            let formattedData = {};
+
+            cmsData.all_products.forEach(p => {
+                // 修復圖片路徑：CMS 上傳的可能是 "img/xxx.jpg" 或 "/img/xxx.jpg"
+                const fixedImages = p.images.map(imgItem => {
+                    // CMS 的 list 裡面如果是單一 image widget，有時會包成物件 {img: "..."}
+                    let rawPath = (typeof imgItem === 'object') ? imgItem.img : imgItem;
+                    // 確保路徑前面有 / 或是符合你的目錄結構
+                    return rawPath.startsWith('http') ? rawPath : (rawPath.startsWith('/') ? rawPath : '/' + rawPath);
+                });
+
+                // 修復特點列表 (CMS widget: list 預設會包成 [{item: "..."}])
+                const fixedFeatures = p.features.map(f => (typeof f === 'object') ? f.item : f);
+
+                formattedData[p.id] = {
+                    ...p,
+                    images: fixedImages,
+                    features: fixedFeatures
+                };
+            });
+
+            productData = formattedData;
+            console.log("✅ CMS 資料載入並格式化成功:", productData);
+        } else {
+            throw new Error("CMS 內尚無商品");
+        }
+
     } catch (err) {
-        console.error("資料載入失敗", err);
+        console.warn("ℹ️ 無法從 CMS 讀取資料，使用備份資料庫 (defaultProductData)。原因:", err.message);
+        productData = { ...defaultProductData };
     }
 
     // 2. 初始化時從本地儲存讀取購物車資料
