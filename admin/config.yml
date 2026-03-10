@@ -2,9 +2,11 @@ backend:
   name: github
   repo: JIE201027/wishbone
   branch: main
-  auth_type: pkce # 使用 PKCE 模式，不需要架設任何 Vercel 認證伺服器
+  auth_type: pkce # 核心：免伺服器模式
+  client_id: Ov23liM0kZxs0KsF2a5C
   base_url: https://api.github.com
 
+display_url: https://wishbone-zeta.vercel.app
 media_folder: "img"
 public_folder: "/img"
 
