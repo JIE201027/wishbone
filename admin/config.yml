@@ -2,6 +2,7 @@ backend:
   name: github
   repo: JIE201027/wishbone
   branch: main
+  auth_type: pkce # <--- 關鍵：改用 PKCE 模式
   base_url: https://api.github.com
   # 專門給 Vercel 使用的 GitHub 認證服務端點
   site_id: wishbone-zeta.vercel.app
