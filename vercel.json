@@ -1,4 +1,18 @@
 {
     "cleanUrls": true,
-    "trailingSlash": false
+    "trailingSlash": true,
+    "rewrites": [
+        {
+            "source": "/wish",
+            "destination": "/wish/index.html"
+        },
+        {
+            "source": "/red",
+            "destination": "/red/index.html"
+        },
+        {
+            "source": "/myshop",
+            "destination": "/myshop/index.html"
+        }
+    ]
 }
