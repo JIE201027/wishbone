@@ -1,0 +1,275 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>案例作品 | KAN DESIGN</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="bg-white text-slate-900">
+
+    <!-- nav 導覽列 -->
+
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-rose-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
+            <a href="/kan-design/" class="text-2xl font-black tracking-tighter flex items-center">
+                KAN<span class="text-rose-400">.</span>DESIGN
+            </a>
+
+            <div class="flex items-center space-x-10">
+                <div class="hidden md:flex space-x-8 font-medium">
+                    <a href="index.html" class="nav-link hover:text-rose-400 transition">Home</a>
+                    <a href="about.html" class="nav-link hover:text-rose-400 transition">About</a>
+                    <a href="services.html" class="nav-link hover:text-rose-400 transition">Services</a>
+                    <a href="portfolio.html" class="nav-link hover:text-rose-400 transition">Portfolio</a>
+                </div>
+
+                <a href="contact.html"
+                    class="px-6 py-2.5 bg-rose-400 text-white rounded-full font-bold hover:bg-rose-500 transition shadow-lg shadow-rose-100">開始合作</a>
+
+                <button id="menu-toggle" class="md:hidden text-2xl text-slate-900 relative z-[100] p-2">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 手機版漢堡選單 -->
+
+    <div id="mobile-menu"
+        class="fixed inset-0 z-[60] bg-white translate-x-full transition-transform duration-300 md:hidden">
+        <div class="p-6">
+            <div class="flex justify-end">
+                <button id="menu-close" class="text-3xl text-slate-900">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="flex flex-col items-center space-y-8 mt-16">
+                <a href="index.html" class="text-2xl font-bold text-slate-900 hover:text-rose-400 transition">Home</a>
+                <a href="about.html" class="text-2xl font-bold text-slate-900 hover:text-rose-400 transition">About</a>
+                <a href="services.html"
+                    class="text-2xl font-bold text-slate-900 hover:text-rose-400 transition">Services</a>
+                <a href="portfolio.html"
+                    class="text-2xl font-bold text-slate-900 hover:text-rose-400 transition">Portfolio</a>
+
+                <a href="contact.html"
+                    class="px-10 py-3 bg-rose-400 text-white rounded-full font-bold shadow-lg shadow-rose-100 transition hover:bg-rose-500">開始合作</a>
+            </div>
+        </div>
+    </div>
+
+    <section class="pt-32 pb-20 bg-rose-50">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-black mb-6" data-aos="fade-up">服務方案</h1>
+            <p class="text-slate-500 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+                從 0 到 1 打造品牌價值，我們提供全方位的視覺解決方案。
+            </p>
+        </div>
+    </section>
+
+    <section class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 -mt-32">
+
+                <div class="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 flex flex-col h-full"
+                    data-aos="zoom-in">
+                    <div
+                        class="w-16 h-16 bg-rose-50 text-rose-400 rounded-2xl flex items-center justify-center mb-8 text-3xl">
+                        <i class="fa-solid fa-bezier-curve"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-900">品牌視覺設計</h3>
+                    <p class="text-slate-500 mb-8 flex-grow">適合新創品牌或老店轉型，建立核心品牌 DNA。</p>
+                    <ul class="space-y-4 mb-10 text-slate-600">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i> Logo
+                            標誌設計</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i>
+                            標準色與字體規範</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i>
+                            名片與基礎文具設定</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i>
+                            品牌風格應用指南</li>
+                    </ul>
+                    <a href="contact.html"
+                        class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold text-center hover:bg-rose-400 transition-colors">立即諮詢</a>
+                </div>
+
+                <div class="bg-rose-400 p-10 rounded-3xl shadow-2xl flex flex-col h-full text-white relative transform md:scale-105 z-10"
+                    data-aos="zoom-in" data-aos-delay="100">
+                    <div
+                        class="absolute top-6 right-8 bg-white/20 px-4 py-1 rounded-full text-xs font-bold tracking-widest uppercase">
+                        Popular</div>
+                    <div
+                        class="w-16 h-16 bg-white/10 text-white rounded-2xl flex items-center justify-center mb-8 text-3xl">
+                        <i class="fa-solid fa-gem"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">品牌全案企劃</h3>
+                    <p class="text-rose-50 mb-8 flex-grow">深度挖掘品牌靈魂，從定位到感官視覺，打造具備市場競爭力的完整識別系統。</p>
+                    <ul class="space-y-4 mb-10 text-rose-50">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check"></i> 品牌定位與市場受眾分析</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check"></i> 完整視覺識別系統 (VI) 建立
+                        </li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check"></i> 品牌標準字與輔助圖形設計</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check"></i> 品牌轉型與形象翻新策略</li>
+                    </ul>
+                    <a href="contact.html"
+                        class="w-full py-4 bg-white text-rose-400 rounded-xl font-bold text-center hover:bg-slate-900 hover:text-white transition-colors">立即預約</a>
+                </div>
+
+                <div class="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 flex flex-col h-full"
+                    data-aos="zoom-in" data-aos-delay="200">
+                    <div
+                        class="w-16 h-16 bg-rose-50 text-rose-400 rounded-2xl flex items-center justify-center mb-8 text-3xl">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-900">平面視覺應用</h3>
+                    <p class="text-slate-500 mb-8 flex-grow">針對實體店面、產品包裝，提供一站式的印刷解決方案。</p>
+                    <ul class="space-y-4 mb-10 text-slate-600">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i>
+                            菜單與店面輸出設計</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i>
+                            商品包裝設計</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i>
+                            海報與宣傳摺頁</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-rose-400"></i>
+                            印刷材質專業建議</li>
+                    </ul>
+                    <a href="contact.html"
+                        class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold text-center hover:bg-rose-400 transition-colors">立即諮詢</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-rose-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-16 text-slate-900">常見問題解答</h2>
+            <div class="space-y-6">
+
+                <div class="p-6 bg-slate-50 rounded-2xl transition-all hover:bg-white hover:shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-clock text-rose-400 text-sm"></i>
+                        <span class="relative -top-[1px]">設計流程需要多久？</span>
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        一般 Logo 設計約 2-3 週，網頁設計則視功能需求約 4-8 週不等。我們會提供詳細的進度表給您。
+                    </p>
+                </div>
+
+                <div class="p-6 bg-slate-50 rounded-2xl transition-all hover:bg-white hover:shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-rose-400 text-sm"></i>
+                        <span class="relative -top-[1px]">可以只做單項設計嗎？</span>
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        當然可以！雖然我們建議完整的品牌識別，但針對特定需求（如單純網頁切版、名片設計）我們也能提供報價。
+                    </p>
+                </div>
+
+                <div class="p-6 bg-slate-50 rounded-2xl transition-all hover:bg-white hover:shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-file-contract text-rose-400 text-sm"></i>
+                        <span class="relative -top-[1px]">設計結案後會提供哪些檔案？</span>
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        我們提供完整的交付標準。包含向量原始檔（AI、EPS）、高解析度圖檔（PNG、JPG）以及品牌應用規範書。針對網頁專案，則會提供原始程式碼或協助上線託管。
+                    </p>
+                </div>
+
+                <div class="p-6 bg-slate-50 rounded-2xl transition-all hover:bg-white hover:shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-rotate text-rose-400 text-sm"></i>
+                        <span class="relative -top-[1px]">如果不滿意初稿，可以修改幾次？</span>
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        標準方案包含 **3 次細部校正**。我們重視前期的「需求訪談」，透過精準的溝通將誤解降到最低，確保初稿即能高度符合您的品牌精神。
+                    </p>
+                </div>
+
+                <div class="p-6 bg-slate-50 rounded-2xl transition-all hover:bg-white hover:shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-copyright text-rose-400 text-sm"></i>
+                        <span class="relative -top-[1px]">設計作品的版權歸誰所有？</span>
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        在費用結清後，該設計作品的商業使用權將完整轉讓給客戶。我們僅保留作品的「著作人格權」作為 KAN DESIGN 作品集展示之用。
+                    </p>
+                </div>
+
+                <div class="p-6 bg-slate-50 rounded-2xl transition-all hover:bg-white hover:shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-hand-holding-dollar text-rose-400 text-sm"></i>
+                        <span class="relative -top-[1px]">付款方式與流程是如何安排的？</span>
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        簽約後收取 **50% 訂金**作為專案啟動金，交付最終檔案前支付剩餘 50% 尾款。
+                    </p>
+                </div>
+
+                <div class="p-6 bg-slate-50 rounded-2xl transition-all hover:bg-white hover:shadow-md">
+                    <h4 class="font-bold text-lg mb-2 text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-briefcase text-rose-400 text-sm"></i>
+                        <span class="relative -top-[1px]">可以承接急件專案嗎？</span>
+                    </h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        我們會根據目前的工作排程評估。若為急件，將會視情況酌收 **20%-50% 的急件處理費**，以確保在壓縮的時間內仍能維持高品質產出。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+
+    <footer class="bg-white border-t border-rose-50 py-12 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-8 mb-8">
+            <div class="col-span-2">
+                <a href="/kan-design/" class="text-2xl font-black tracking-tighter block mb-4">KAN<span
+                        class="text-rose-400">.</span>DESIGN</a>
+                <p class="text-slate-500 max-w-sm">專注於品牌視覺、Logo設計與精緻排版，為您的企業創造深刻的第一印象。</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-slate-900">快速連結</h4>
+                <ul class="space-y-2 text-slate-500">
+                    <li><a href="/kan-design/about" class="hover:text-rose-400 transition">關於我們</a></li>
+                    <li><a href="/kan-design/services" class="hover:text-rose-400 transition">服務項目</a></li>
+                    <li><a href="/kan-design/portfolio" class="hover:text-rose-400 transition">作品集</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-slate-900">聯絡資訊</h4>
+                <ul class="space-y-2 text-slate-500">
+                    <li><i class="fa-regular fa-envelope w-5"></i> kandesign@gmail.com</li>
+                    <li><i class="fa-brands fa-instagram w-5"></i> @kan.design</li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-8 border-t border-slate-100 text-center text-slate-400 text-sm">
+            &copy; 2026 KAN Design Studio. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- back To Top -->
+
+    <button id="backToTop"
+        class="fixed z-50 w-12 h-12 bg-rose-400 text-white rounded-full shadow-2xl flex items-center justify-center opacity-0 translate-y-10 pointer-events-none transition-all duration-500 hover:bg-rose-300 hover:-translate-y-1">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+    <script src="./js/main.js" defer></script>
+</body>
+
+</html>
