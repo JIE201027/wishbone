@@ -123,4 +123,37 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // === 表單送出模擬 (SweetAlert 風格) ===
+    const contactForm = document.getElementById('contactForm');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // 防止頁面重整
+
+            // 抓取按鈕並顯示載入中
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "傳送中...";
+            submitBtn.disabled = true;
+
+            // 模擬發送延遲
+            setTimeout(() => {
+                // 隱藏表單內容，改顯示成功訊息
+                contactForm.innerHTML = `
+                <div class="text-center py-12" data-aos="zoom-in">
+                    <div class="w-20 h-20 bg-rose-50 text-rose-400 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">訊息已送出！</h3>
+                    <p class="text-slate-500 mb-8">感謝您的諮詢，KAN DESIGN 將於 24 小時內回覆您。</p>
+                    <button onclick="location.reload()" class="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-rose-400 transition-colors">
+                        返回
+                    </button>
+                </div>
+            `;
+            }, 1500);
+        });
+    }
+
 });
