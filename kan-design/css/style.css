@@ -21,10 +21,16 @@
 }
 
 body {
-    font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    /* 這裡的名稱必須跟 Google Fonts 提供的一模一樣 */
+    font-family: "Noto Sans TC", sans-serif;
     color: var(--secondary-color);
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+/* 針對 iOS 的優化：防止 iPhone 自動調整文字大小 */
+html {
+    -webkit-text-size-adjust: 100%;
 }
 
 /* --- 3. 導覽列動畫 --- */
