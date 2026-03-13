@@ -19,7 +19,7 @@
             "destination": "/kan-design/index.html"
         },
         {
-            "source": "/kan-design/:path((?!.*\\.html$).*)",
+            "source": "/kan-design/:path",
             "destination": "/kan-design/:path.html"
         }
     ]
