@@ -38,6 +38,10 @@ body {
     width: 100%;
 }
 
+hr {
+    border-top: 2px solid var(--ufo-gray);
+}
+
 /* --- 2. 飛碟跑馬燈 (你的核心需求) --- */
 .ufo-marquee {
     width: 100%;
@@ -149,7 +153,7 @@ body {
     font-weight: bold;
     color: var(--alien-green);
     /* 讓文字也呼應外星主題 */
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .cart {
@@ -217,7 +221,7 @@ body {
     margin-bottom: 30px;
     padding-left: 0;
     /* 徹底移除，靠父層 container 對齊 */
-    font-weight: bold;
+    font-weight: 800;
     color: var(--text-dark);
 }
 
@@ -324,47 +328,163 @@ body {
     }
 }
 
-/* 吸牛動畫微互動 */
+/* ============================================================
+   🛸 外星基地：吸牛動畫微互動 (整理完成版)
+   功能：電腦版大尺寸、手機版自動縮小、圖片飛碟、完美置中
+   ============================================================ */
+
+/* 1. 核心容器：確保所有元素水平絕對置中 */
 .abduction-scene {
     position: relative;
-    display: inline-block;
-    /* 讓容器寬度等於飛碟寬度 */
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 220px;
+    /* 電腦版容器寬度 */
+    margin: 40px auto;
+    /* 增加上下間距讓畫面更開闊 */
 }
 
+/* 2. 飛碟圖片容器 */
 .ufo-hover {
-    font-size: 80px;
-    z-index: 2;
-    position: black;
+    width: 220px;
+    /* 電腦版飛碟大尺寸 */
+    height: auto;
+    z-index: 10;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+.ufo-img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 15px rgba(124, 252, 0, 0.6));
+    /* 綠色科技光暈 */
+    transition: transform 0.3s ease;
+}
+
+/* 飛碟懸停晃動動畫 */
+.abduction-scene:hover .ufo-img {
+    animation: ufo-shake 0.5s infinite alternate ease-in-out;
+}
+
+@keyframes ufo-shake {
+    from {
+        transform: translateY(0) rotate(-2deg);
+    }
+
+    to {
+        transform: translateY(-5px) rotate(2deg);
+    }
+}
+
+/* 3. 牛牛：電腦版大尺寸 */
 .cow {
-    font-size: 40px;
-    margin-top: 60px;
-    transition: 1s ease;
+    font-size: 70px;
+    /* 電腦版牛牛尺寸 */
+    margin-top: 80px;
+    /* 與飛碟的距離 */
+    transition: 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 5;
 }
 
+/* 4. 傳送光束：精準鎖定中心點 */
 .beam {
-    width: 60px;
-    height: 120px;
-    background: linear-gradient(to bottom, rgba(124, 252, 0, 0.6), transparent);
-    margin: -20px auto 0;
-    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    width: 160px;
+    /* 電腦版光束寬度 */
+    height: 220px;
+    /* 電腦版光束長度 */
+    background: linear-gradient(to bottom, rgba(124, 252, 0, 0.7), transparent);
+    clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
     opacity: 0;
     position: absolute;
-    left: 40%;
+    top: 80px;
+    /* 配合電腦版飛碟高度的出發點 */
+    left: 50%;
     transform: translateX(-50%);
-    transition: 0.5s;
+    /* 完美的絕對置中 */
+    transition: 0.5s ease;
+    pointer-events: none;
 }
 
-/* 當滑鼠移到場景上時，光束出現，牛被吸上去 */
+/* 5. 互動觸發：吸走牛牛 */
 .abduction-scene:hover .beam {
     opacity: 1;
 }
 
 .abduction-scene:hover .cow {
-    transform: translateY(-80px) scale(0.5) rotate(180deg);
+    transform: translateY(-150px) scale(0.1) rotate(540deg);
+    /* 吸上去並縮小旋轉 */
     opacity: 0;
+}
+
+/* --- 2. 平板版本 (769px ~ 1024px) --- */
+@media (max-width: 1024px) {
+    .abduction-scene {
+        width: 170px;
+        margin: 30px auto;
+        margin-left: 50px;
+        /* ✨ 關鍵新增：增加左邊距，讓它遠離文字 */
+        flex-shrink: 0;
+        /* 確保飛碟不會因為文字太多而被擠壓變形 */
+    }
+
+    .ufo-hover {
+        width: 170px;
+    }
+
+    .cow {
+        font-size: 55px;
+        margin-top: 60px;
+    }
+
+    .beam {
+        width: 130px;
+        height: 180px;
+        top: 65px;
+    }
+
+    .abduction-scene:hover .cow {
+        transform: translateY(-120px) scale(0.15) rotate(450deg);
+    }
+}
+
+
+/* --- 3. 手機版適應 (螢幕寬度 768px 以下) --- */
+
+@media (max-width: 768px) {
+    .abduction-scene {
+        width: 120px;
+        /* 手機版容器縮小 */
+        margin: 20px auto;
+        /* 手機版回歸水平置中 */
+        margin-left: auto;
+    }
+
+    .ufo-hover {
+        width: 120px;
+        /* 手機版飛碟尺寸 */
+    }
+
+    .cow {
+        font-size: 40px;
+        /* 手機版牛牛尺寸 */
+        margin-top: 40px;
+    }
+
+    .beam {
+        width: 100px;
+        height: 140px;
+        top: 50px;
+        /* 手機版光束出發點微調 */
+    }
+
+    .abduction-scene:hover .cow {
+        transform: translateY(-90px) scale(0.2) rotate(360deg);
+    }
 }
 
 /* --- 5. 產品網格 (修正版：解決垂直跑版) --- */
@@ -381,8 +501,12 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
     width: 100%;
-    max-width: 1200px;
+    /* 關鍵：將 max-width 稍微縮小，或確保 padding 存在 */
+    max-width: 1240px;
     margin: 0 auto;
+    /* 核心修正：在所有尺寸下都保留 30px 的左右緩衝區 */
+    padding: 0 30px;
+    box-sizing: border-box;
 }
 
 .product-card {
@@ -457,7 +581,21 @@ body {
     transition: 0.3s;
 }
 
-@media (max-width: 600px) {
+/* --- 修正平板版卡片貼邊問題 (769px ~ 1024px) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
+    #product-list.product-grid {
+        /* 增加左右 40px 的內距，讓卡片往中間縮 */
+        padding: 0 40px !important;
+
+        /* 視情況調整 gap，讓卡片之間的距離也寬鬆一點 */
+        gap: 25px;
+
+        /* 確保寬度計算包含 padding */
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 768px) {
 
     /* 1. 強制讓 Grid 變成兩欄 */
     #product-list.product-grid {
@@ -498,9 +636,8 @@ body {
 
 /* --- 6. 購物車區塊與容器整合 --- */
 .alien-cart-box {
-    padding: 80px;
+    padding: 60px 80px;
     /* 對齊產品網格的 5% padding */
-    border-top: 2px solid var(--ufo-gray);
     background-color: var(--light-gray);
 }
 
@@ -516,7 +653,7 @@ h4.alien-title {
     text-align: center;
     color: var(--text-dark);
     font-weight: 800;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
     letter-spacing: 2px;
 }
 
@@ -774,13 +911,17 @@ h4.alien-title {
 }
 
 @media (max-width: 600px) {
-
     .alien-form {
-        padding: 1.2rem;
+        /* 核心修正：將 300px 改為 100%，確保窄螢幕不爆框 */
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 1rem;
+        /* 稍微縮小內距，爭取空間 */
     }
 
-    .total-amount {
-        font-size: 1.5rem;
+    .form-group.full-width {
+        grid-column: 1;
+        /* 手機版強制單欄 */
     }
 }
 
