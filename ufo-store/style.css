@@ -1,0 +1,901 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+/* --- 1. 變數與基礎設定 --- */
+:root {
+    --alien-green: #7CFC00;
+    /* 外星螢光綠 */
+    --alien-dark-green: #5eb500;
+    --ufo-gray: #708090;
+    /* 飛碟金屬灰 */
+    --light-gray: #F8F9FA;
+    /* 背景淺灰 */
+    --space-white: #FFFFFF;
+    /* 純白 */
+    --text-dark: #333333;
+    --container-width: 1200px;
+    /* 統一內容最大寬度 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+/* 創立一個通用的容器類別，負責內容居中與左右緩衝 */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 20px;
+    /* 統一的左右內距，取代原本分散在各處的 padding-left */
+    width: 100%;
+}
+
+/* --- 2. 飛碟跑馬燈 (你的核心需求) --- */
+.ufo-marquee {
+    width: 100%;
+    height: 40px;
+    background-color: var(--ufo-gray);
+    color: var(--space-white);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid var(--alien-green);
+}
+
+.marquee-text {
+    white-space: nowrap;
+    animation: scrollText 15s linear infinite;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+}
+
+.ufo-ship-flying {
+    position: absolute;
+    font-size: 28px;
+    z-index: 10;
+    top: 2px;
+    /* 飛碟從左飛到右的動畫 */
+    animation: flyAcross 8s ease-in-out infinite;
+}
+
+@keyframes scrollText {
+    0% {
+        transform: translateX(100vw);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes flyAcross {
+    0% {
+        left: -50px;
+        transform: translateY(0) rotate(-10deg);
+    }
+
+    25% {
+        transform: translateY(-3px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(0) rotate(10deg);
+    }
+
+    75% {
+        transform: translateY(-3px) rotate(0deg);
+    }
+
+    100% {
+        left: 100vw;
+        transform: translateY(0) rotate(-10deg);
+    }
+}
+
+/* --- 3. 導覽列 (Flexbox 排版) --- */
+/* 外層：撐滿螢幕，負責白底與陰影 */
+/* 1. 讓 Header 黏在頂端 */
+/* 核心：讓整個群組置頂 */
+.top-nav-group {
+    position: sticky;
+    top: 0;
+    z-index: 2000;
+    /* 確保在所有內容最前方 */
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 跑馬燈樣式修正 */
+.ufo-marquee {
+    background: #6c757d;
+    /* 灰色背景 */
+    color: white;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 導覽列樣式優化 */
+.header-wrapper {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    /* 磨砂玻璃質感 */
+    border-bottom: 2px solid var(--alien-green);
+    /* 螢光綠飾條 */
+    padding: 12px 0;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo {
+    font-weight: bold;
+    color: var(--alien-green);
+    /* 讓文字也呼應外星主題 */
+    font-size: 1.2rem;
+}
+
+.cart {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.cart:hover {
+    transform: scale(1.05);
+    /* 滑鼠移上去微動效果 */
+}
+
+/* 3. 針對手機版的優化 */
+@media (max-width: 600px) {
+    .header-wrapper {
+        padding: 10px 0;
+    }
+
+    .logo {
+        font-size: 1rem;
+        /* 螢幕小一點時文字縮小，避免擠壓 */
+    }
+}
+
+/* 錨點跳轉修正：預留頂部兩層的高度 */
+#cart-section {
+    scroll-margin-top: 120px;
+}
+
+/* --- 4. 英雄區塊與飛碟吸牛動畫 --- */
+
+.hero {
+    display: flex;
+    justify-content: center;
+    /* 讓整層容器居中 */
+    align-items: center;
+    padding: 80px 0;
+    background: linear-gradient(to bottom, var(--space-white), var(--light-gray));
+    min-height: 60vh;
+    width: 100%;
+}
+
+/* 這是對齊的關鍵容器 */
+.hero-container {
+    display: flex;
+    justify-content: space-between;
+    /* 文字在左，動畫在右 */
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 20px;
+    /* 這裡的 20px 必須跟 .header-content 的 padding 一致 */
+}
+
+.hero-content {
+    flex: 0 1 700px;
+    /* 限制文字寬度，避免壓迫動畫 */
+    text-align: left;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 30px;
+    padding-left: 0;
+    /* 徹底移除，靠父層 container 對齊 */
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.hero-content p {
+    font-size: 18px;
+    padding-left: 0;
+    /* 徹底移除 */
+    margin-bottom: 15px;
+    line-height: 1.8;
+}
+
+.cta-btn {
+    /* 1. 基礎顯示修正 */
+    display: inline-flex;
+    /* 改為 flex 確保文字垂直居中 */
+    align-items: center;
+    justify-content: center;
+
+    /* 2. 徹底清除 <a> 標籤預設樣式 */
+    text-decoration: none !important;
+    /* 強制移除討人厭的底線 */
+
+    /* 3. 尺寸與間距 */
+    padding: 12px 32px;
+    /* 增加一點寬度感 */
+    margin-top: 30px;
+    margin-left: 0;
+    /* 確保對齊左側 */
+
+    /* 4. 顏色與字體 */
+    background-color: var(--alien-green);
+    color: var(--text-dark) !important;
+    /* 強制確保文字是深色 */
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 1px;
+    /* 增加字距更有質感 */
+
+    /* 5. 圓角與陰影 */
+    border-radius: 8px;
+    /* 稍微大一點的圓角更現代 */
+    box-shadow: 0 4px 15px rgba(124, 252, 0, 0.3);
+
+    /* 6. 動畫過渡 */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: none;
+    /* 預防萬一有 border 跑出來 */
+}
+
+.cta-btn:hover {
+    background-color: var(--alien-dark-green);
+    color: var(--space-white) !important;
+    /* 懸停時變白 */
+    transform: translateY(-3px);
+    /* 向上微浮 */
+    box-shadow: 0 8px 25px rgba(124, 252, 0, 0.5);
+}
+
+/* 手機版專屬 */
+@media (max-width: 768px) {
+
+    /* 1. 縮小英雄區塊的上下內距 */
+    .hero {
+        padding: 30px 0;
+        /* 將原本的 80px 縮小為 30px */
+        min-height: auto;
+        /* 解除最低高度限制，讓內容自然撐開 */
+    }
+
+    /* 2. 確保英雄區塊的容器在手機版也是正確對齊 */
+    .hero-container {
+        padding: 0 20px;
+        gap: 20px;
+        /* 縮小文字跟動畫的間距 */
+    }
+
+    /* 3. 移除標題多餘的頂部外距 */
+    .hero-content h1 {
+        font-size: 32px;
+        margin-top: 0;
+        /* 核心修正：把這裡改成 0 */
+        margin-bottom: 15px;
+        padding-left: 0;
+        color: var(--text-dark);
+    }
+
+    .hero-content p {
+        font-size: 16px;
+        /* 稍微縮小一點字體，讓手機版更好閱讀 */
+        padding-left: 0;
+        /* 核心修正：移除多餘的左邊距 */
+        margin-right: 0;
+        /* 確保右邊也不要有奇怪的推擠 */
+        line-height: 1.8;
+    }
+
+    .cta-btn {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        /* 微調一下按鈕間距 */
+        margin-left: 0;
+        /* 確保按鈕也乖乖靠左 */
+    }
+}
+
+/* 吸牛動畫微互動 */
+.abduction-scene {
+    position: relative;
+    display: inline-block;
+    /* 讓容器寬度等於飛碟寬度 */
+    text-align: center;
+}
+
+.ufo-hover {
+    font-size: 80px;
+    z-index: 2;
+    position: black;
+}
+
+.cow {
+    font-size: 40px;
+    margin-top: 60px;
+    transition: 1s ease;
+}
+
+.beam {
+    width: 60px;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(124, 252, 0, 0.6), transparent);
+    margin: -20px auto 0;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    opacity: 0;
+    position: absolute;
+    left: 40%;
+    transform: translateX(-50%);
+    transition: 0.5s;
+}
+
+/* 當滑鼠移到場景上時，光束出現，牛被吸上去 */
+.abduction-scene:hover .beam {
+    opacity: 1;
+}
+
+.abduction-scene:hover .cow {
+    transform: translateY(-80px) scale(0.5) rotate(180deg);
+    opacity: 0;
+}
+
+/* --- 5. 產品網格 (修正版：解決垂直跑版) --- */
+#products.products {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 80px 0;
+}
+
+/* 使用 ID 選取器 #product-list 增加權重，確保 Grid 正常運作 */
+/* 確保 Grid 容器有正確的寬度分配 */
+#product-list.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-card {
+    background-color: var(--space-white);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+
+    /* 讓內層元素垂直排列，且撐滿寬度 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    border-bottom: 5px solid var(--alien-green);
+    box-shadow: 0 15px 35px rgba(124, 252, 0, 0.2);
+}
+
+.img-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--light-gray);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+}
+
+.product-card h3 {
+    width: 100%;
+    /* 佔滿卡片寬度 */
+    text-align: center;
+    font-size: 1.25rem;
+    margin: 15px 0 10px 0;
+    white-space: nowrap;
+    /* 防止標題換行（若太長可改為 normal） */
+}
+
+.product-card p.small {
+    width: 100%;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    /* 這裡確保文字正常橫向排列 */
+    display: block;
+}
+
+.price {
+    font-size: 1.25rem;
+    color: var(--alien-dark-green);
+    font-weight: 700;
+    margin-top: auto;
+    /* 這是對齊按鈕的靈魂屬性 */
+}
+
+.add-to-cart-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background-color: var(--ufo-gray);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+@media (max-width: 600px) {
+
+    /* 1. 強制讓 Grid 變成兩欄 */
+    #product-list.product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
+        /* 縮小手機版的間距，避免太擠 */
+        padding: 0 10px;
+        /* 給左右一點呼吸空間 */
+    }
+
+    /* 2. 微調卡片內元素大小，確保放得下 */
+    .product-card {
+        padding: 15px;
+        /* 減少內距 */
+    }
+
+    .product-card h3 {
+        font-size: 1rem;
+        /* 標題縮小一點 */
+        white-space: normal;
+        /* 允許換行以免字被切掉 */
+    }
+
+    .img-placeholder {
+        font-size: 40px;
+        /* 縮小 Emoji 圖示 */
+    }
+
+    .price {
+        font-size: 1.1rem;
+    }
+
+    .add-to-cart-btn {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+/* --- 6. 購物車區塊與容器整合 --- */
+.alien-cart-box {
+    padding: 80px;
+    /* 對齊產品網格的 5% padding */
+    border-top: 2px solid var(--ufo-gray);
+    background-color: var(--light-gray);
+}
+
+.alien-container {
+    width: 100%;
+    max-width: 1200px;
+    /* 提升最大寬度以對齊電腦版卡片 */
+    margin: 0 auto;
+}
+
+h4.alien-title {
+    font-size: 24px;
+    text-align: center;
+    color: var(--text-dark);
+    font-weight: 800;
+    margin-bottom: 5rem;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+
+    /* 1. 確保最外層容器沒有偏移 */
+    #cart-section.alien-cart-box {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box;
+        /* 確保 padding 不會撐開寬度 */
+    }
+
+    /* 2. 確保收件人資訊表單容器置中 */
+    .alien-container {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 20px !important;
+        /* 統一左右內距 */
+        margin: 0 auto !important;
+        /* 確保區塊置中 */
+        box-sizing: border-box;
+    }
+
+    /* 3. 如果你有使用 Bootstrap 的 row，請確保它被包在 container 內 */
+    .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    h4.alien-title {
+        font-size: 20px;
+    }
+
+}
+
+/* --- 7. 商品清單與清單行 --- */
+.alien-item-list {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--space-white);
+    border: 1px solid var(--ufo-gray);
+    border-radius: 12px;
+}
+
+.alien-empty-text {
+    text-align: center;
+    color: var(--ufo-gray);
+    margin: 2rem 0;
+}
+
+/* 商品每一行的細節 (JS 渲染時使用) */
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--ufo-gray);
+    animation: fadeIn 0.3s ease;
+}
+
+/* --- 購物車解除按鈕設計 --- */
+.remove-btn {
+    padding: 6px 12px;
+    background-color: transparent;
+    color: #5eb500;
+    /* 警告紅 */
+    border: 1px solid #5eb500;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.remove-btn:hover {
+    background-color: #5eb500;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.3);
+    transform: scale(1.05);
+}
+
+.remove-btn:active {
+    transform: scale(0.95);
+}
+
+/* 購物車行間距微調 */
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.cart-item-row strong {
+    color: var(--text-dark);
+    font-size: 1.05rem;
+}
+
+.cart-item-row small {
+    color: #888;
+}
+
+/* --- 8. 結帳表單優化 (電腦版自動並排) --- */
+.section-subtitle {
+    margin: 2.5rem 0 1rem;
+    color: var(--alien-dark-green);
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-left: 5px solid var(--alien-green);
+    padding-left: 12px;
+}
+
+.alien-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* 電腦版自動並排 */
+    gap: 20px;
+    background: var(--space-white);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid var(--ufo-gray);
+}
+
+.form-group {
+    margin-bottom: 5px;
+}
+
+/* 讓地址欄位在並排模式下佔滿整行 */
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: var(--ufo-gray);
+    font-weight: 600;
+}
+
+.alien-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.alien-input:focus {
+    outline: none;
+    border-color: var(--alien-green);
+    box-shadow: 0 0 8px rgba(124, 252, 0, 0.2);
+}
+
+/* --- 9. 收款資訊盒 --- */
+.payment-info-box {
+    background-color: var(--ufo-gray);
+    color: var(--space-white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    line-height: 1.8;
+    border-left: 8px solid var(--alien-green);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-info-box strong {
+    color: var(--alien-green);
+}
+
+/* --- 10. 金額計算與最終結帳 --- */
+.alien-calculation-area {
+    margin-top: 2rem;
+    border-top: 1px solid var(--ufo-gray);
+    padding-top: 2rem;
+}
+
+.alien-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    color: var(--text-dark);
+}
+
+.alien-alert-tip {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0.8rem;
+    border-radius: 8px;
+    background-color: var(--alien-green);
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    font-weight: bold;
+    border: 1px solid var(--alien-dark-green);
+}
+
+.alien-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--space-white);
+    border-radius: 8px;
+}
+
+.total-amount {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--alien-dark-green);
+}
+
+.final-checkout-btn {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 18px;
+    background-color: var(--alien-green);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 25px rgba(124, 252, 0, 0.3);
+}
+
+.final-checkout-btn:hover {
+    background-color: var(--alien-dark-green);
+    color: var(--space-white);
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 30px rgba(124, 252, 0, 0.4);
+}
+
+/* --- 動畫與響應式 --- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+
+    .alien-form {
+        padding: 1.2rem;
+    }
+
+    .total-amount {
+        font-size: 1.5rem;
+    }
+}
+
+/**************************************
+回到頂端 & line 資訊按鈕
+**************************************/
+
+/* --- 11. 浮動按鈕設計 --- */
+.floating-group {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 999;
+}
+
+.float-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#backToTop {
+    /* 確保這些屬性存在 */
+    display: flex;
+    /* 或是 block，取決於你的設計 */
+    opacity: 1;
+    /* 讓它直接透明度全開 */
+    visibility: visible;
+    /* 確保它是可見的 */
+
+    /* 加上一點懸浮的動畫，讓它更有外星感 */
+    animation: ufo-hover 3s infinite ease-in-out;
+}
+
+/* 額外加碼：讓飛碟真的像在「飄」 */
+@keyframes ufo-hover {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* LINE 諮詢按鈕：使用你的外星綠 */
+.line-action {
+    background-color: var(--alien-green);
+    color: var(--text-dark);
+}
+
+.line-action .btn-icon {
+    font-size: 24px;
+}
+
+.line-action .btn-text {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* 回到頂部按鈕：使用飛碟灰 */
+.top-action {
+    background-color: var(--ufo-gray);
+    color: var(--space-white);
+    font-size: 24px;
+    opacity: 0;
+    /* 初始隱藏 */
+    visibility: hidden;
+    transform: translateY(20px);
+}
+
+.top-action.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* 懸浮效果 */
+.float-btn:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 8px 25px rgba(124, 252, 0, 0.4);
+}
+
+.top-action:hover {
+    background-color: var(--alien-dark-green);
+}
+
+/* 手機版微調 */
+@media (max-width: 600px) {
+    .floating-group {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .float-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .line-action .btn-text {
+        display: none;
+        /* 手機版只顯示圖示 */
+    }
+}
