@@ -3,6 +3,10 @@
     "trailingSlash": true,
     "rewrites": [
         {
+            "source": "/ufo-store",
+            "destination": "/ufo-store/index.html"
+        },
+        {
             "source": "/wish",
             "destination": "/wish/index.html"
         },
